@@ -1,0 +1,13 @@
+import tests.byteunit_test
+import tests.containerimage_test
+import tests.containerimagelist_test
+import tests.descriptor_test
+import tests.manifest_test
+import tests.manifestfactory_test
+import tests.manifestlist_test
+import tests.manifestlistentry_test
+import tests.oci_test
+import tests.platform_test
+import tests.registryclient_test
+import tests.registryclientmock
+import tests.v2s2_test

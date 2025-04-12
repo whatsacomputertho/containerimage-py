@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "containerimage-py"
+version = "0.1.0"
+authors = [
+    {name = "Ethan Balcik", email="ethanbalcik@ibm.com" }
+]
+description = "A python library for ineracting with container images and container image registries"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+keywords = ["container","image","py","oci","docker"]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+dependencies = [
+    "requests",
+    "jsonschema"
+]
+
+[project.urls]
+Homepage = "https://github.com/whatsacomputertho/containerimage-py"
+Issues = "https://github.com/whatsacomputertho/containerimage-py/issues"
+
+[project.optional-dependencies]
+test = ["pytest-mock"]

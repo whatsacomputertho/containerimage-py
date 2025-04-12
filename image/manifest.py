@@ -1,0 +1,126 @@
+import json
+from typing             import  Dict, Any, List, Type
+from image.descriptor   import  ContainerImageDescriptor
+
+"""
+ContainerImageManifest class
+
+Represents an arch manifest returned from the distribution registry API.
+This is a base class extended by the ContainerImageManifestV2S2 and
+ContainerImageManifestOCI since the two specs are very similar, with the
+v2s2 spec being more restrictive than the OCI spec.
+"""
+class ContainerImageManifest:
+    def __init__(self, manifest: Dict[str, Any]):
+        """
+        Constructor for the ContainerImageManifest class
+
+        Args:
+        manifest (Dict[str, Any]): The manifest loaded into a dict
+        """
+        self.manifest = manifest
+
+    def get_layer_descriptors(self) -> List[Type[ContainerImageDescriptor]]:
+        """
+        Returns a list of the container image's layer descriptors, defaults to
+        empty list
+
+        Args:
+        None
+
+        Returns:
+        List[Type[ContainerImageDescriptor]]: The container image's layer
+            descriptors
+        """
+        # Get the layers of the image manifest
+        layer_meta_list = list(self.manifest.get("layers"))
+        if len(layer_meta_list) == 0:
+            raise ValueError("No layers found")
+
+        # Instantiate as ContainerImageDescriptor list and return
+        layers = []
+        for layer_meta in layer_meta_list:
+            layer = ContainerImageDescriptor(layer_meta)
+            layers.append(layer)
+        return layers
+
+    def get_config_descriptor(self) -> ContainerImageDescriptor:
+        """
+        Returns the container image manifest config descriptor
+
+        Args:
+        None
+
+        Returns:
+        ContainerImageDescriptor: The container image manifest config
+            descriptor
+        """
+        # Get the container image manifest config
+        config = dict(self.manifest.get("config"))
+        return ContainerImageDescriptor(config)
+    
+    def get_media_type(self) -> str:
+        """
+        Returns the mediaType of the container image manifest
+
+        Args:
+        None
+
+        Returns:
+        str: The container image manifest mediaType
+        """
+        return str(self.manifest.get("mediaType"))
+
+    def get_size(self) -> int:
+        """
+        Returns the container image manifest size in bytes
+
+        Args:
+        None
+
+        Returns:
+        int: The container image manifest size in bytes
+        """
+        # Get the config size
+        config = self.get_config_descriptor()
+        config_size = config.get_size()
+
+        # Deduplicate the layers in a dict
+        layers = self.get_layer_descriptors()
+        layer_dict = {}
+        for layer in layers:
+            digest = layer.get_digest()
+            size = layer.get_size()
+            layer_dict[digest] = size
+
+        # Get the deduplicated layer sizes
+        layer_size = 0
+        for digest in layer_dict.keys():
+            layer_size += layer_dict[digest]
+
+        # Add and return the size of the manifest
+        return config_size + layer_size
+
+    def __str__(self) -> str:
+        """
+        Formats the ContainerImageManifest as a string
+
+        Args:
+        None
+
+        Returns:
+        str: The ContainerImageManifest formatted as a string
+        """
+        return json.dumps(self.manifest, indent=2, sort_keys=False)
+
+    def __json__(self) -> Dict[str, Any]:
+        """
+        Formats the ContainerImageManifest as a JSON dictionary
+
+        Args:
+        None
+
+        Returns:
+        Dict[str, Any]: The ContainerImageManifest formatted as a JSON dict
+        """
+        return self.manifest
