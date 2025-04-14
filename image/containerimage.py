@@ -38,12 +38,30 @@ wrapped_default.default = json.JSONEncoder().default
 json.JSONEncoder.original_default = json.JSONEncoder.default
 json.JSONEncoder.default = wrapped_default
 
+# Container image media types
+DOCKER_V2S2_MEDIA_TYPE = "application/vnd.docker.distribution.manifest.v2+json"
+DOCKER_V2S1_SIGNED_MEDIA_TYPE = "application/vnd.docker.distribution.manifest.v1+prettyjws"
+DOCKER_V2S1_MEDIA_TYPE = "application/vnd.docker.distribution.manifest.v1+json"
+DOCKER_V2S2_LIST_MEDIA_TYPE = "application/vnd.docker.distribution.manifest.list.v2+json"
+OCI_MANIFEST_MEDIA_TYPE = "application/vnd.oci.image.manifest.v1+json"
+OCI_INDEX_MEDIA_TYPE = "application/vnd.oci.image.index.v1+json"
+
 # Unsupported mediaTypes for the OCI and v2s2 manifest list classes
 UNSUPPORTED_OCI_MEDIA_TYPES = [
-    "application/vnd.docker.distribution.manifest.list.v2+json"
+    DOCKER_V2S2_LIST_MEDIA_TYPE
 ]
 UNSUPPORTED_V2S2_MEDIA_TYPES = [
-    "application/vnd.oci.image.index.v1+json"
+    OCI_INDEX_MEDIA_TYPE
+]
+
+# Default accepted mediaTypes for querying manifests
+DEFAULT_REQUEST_MANIFEST_MEDIA_TYPES = [
+    DOCKER_V2S2_LIST_MEDIA_TYPE,
+    DOCKER_V2S2_MEDIA_TYPE,
+    OCI_INDEX_MEDIA_TYPE,
+    OCI_MANIFEST_MEDIA_TYPE,
+    DOCKER_V2S1_MEDIA_TYPE,
+    DOCKER_V2S1_SIGNED_MEDIA_TYPE
 ]
 
 """
@@ -105,7 +123,7 @@ class ContainerImageManifestList:
         return size
 
     def get_manifests(self, name: str, auth: Dict[str, Any]) -> List[
-            Type[ContainerImageManifest]
+            ContainerImageManifest
         ]:
         """
         Fetches the arch manifests from the distribution registry API
@@ -115,7 +133,7 @@ class ContainerImageManifestList:
         auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        List[Type[ContainerImageManifest]]: The arch manifests
+        List[ContainerImageManifest]: The arch manifests
         """
         # Validate the image name
         valid = bool(re.match(ANCHORED_NAME, name))
@@ -929,7 +947,9 @@ class ContainerImageRegistryClient:
         api_url = f'{api_base_url}/manifests/{image_identifier}'
 
         # Construct the headers for querying the image manifest
-        headers = {}
+        headers = {
+            'Accept': ','.join(DEFAULT_REQUEST_MANIFEST_MEDIA_TYPES)
+        }
 
         # Get the matching auth for the image from the docker config JSON
         reg_auth, found = ContainerImageRegistryClient.get_registry_auth(
