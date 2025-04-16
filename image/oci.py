@@ -1,17 +1,24 @@
 import re
-from typing                     import  Dict, Any, Tuple, Type
+from typing                     import  Dict, Any, Tuple, List
 from jsonschema                 import  validate, ValidationError
 from image.descriptor           import  ContainerImageDescriptor
 from image.manifest             import  ContainerImageManifest
+from image.manifestlist         import  ContainerImageManifestList
 from image.manifestlistentry    import  ContainerImageManifestListEntry
+from image.mediatypes           import  DOCKER_V2S2_LIST_MEDIA_TYPE, \
+                                        DOCKER_V2S2_MEDIA_TYPE
 from image.platform             import  ContainerImagePlatform
 from image.regex                import  ANCHORED_DIGEST
 from image.ocischema            import  MANIFEST_OCI_SCHEMA, \
+                                        IMAGE_INDEX_OCI_SCHEMA, \
                                         IMAGE_INDEX_ENTRY_OCI_SCHEMA
 
 # A list of mediaTypes which are not supported by the OCI manifest spec
-UNSUPPORTED_MEDIA_TYPES = [
-    "application/vnd.docker.distribution.manifest.v2+json"
+UNSUPPORTED_OCI_INDEX_MEDIA_TYPES = [
+    DOCKER_V2S2_LIST_MEDIA_TYPE
+]
+UNSUPPORTED_OCI_MANIFEST_MEDIA_TYPES = [
+    DOCKER_V2S2_MEDIA_TYPE
 ]
 
 """
@@ -54,19 +61,19 @@ class ContainerImageManifestOCI(ContainerImageManifest):
         
         # If there is a mediaType, ensure it is not a v2s2 manifest
         if "mediaType" in manifest.keys():
-            if manifest["mediaType"] in UNSUPPORTED_MEDIA_TYPES:
+            if manifest["mediaType"] in UNSUPPORTED_OCI_MANIFEST_MEDIA_TYPES:
                 return False, f"Unsupported mediaType: {manifest['mediaType']}"
 
         # If all are valid, return True with empty error message
         return True, ""
 
     @staticmethod
-    def from_manifest(manifest: Type[ContainerImageManifest]):
+    def from_manifest(manifest: ContainerImageManifest):
         """
         Converts a generic ContainerImageManifest into an OCI manifst instance
 
         Args:
-        manifest (Type[ContainerImageManifest]): The generic manifest
+        manifest (ContainerImageManifest): The generic manifest
 
         Returns:
         ContainerImageManifestOCI: The OCI manifest instance
@@ -140,23 +147,23 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
                 return platform_valid, err
         
         # If the mediaType is unsupported, then error
-        if entry["mediaType"] in UNSUPPORTED_MEDIA_TYPES:
+        if entry["mediaType"] in UNSUPPORTED_OCI_MANIFEST_MEDIA_TYPES:
             return False, f"Unsupported mediaType: {entry['mediaType']}"
 
         # Valid if all of the above are valid
         return True, ""
 
     @staticmethod
-    def from_manifest_list_entry(entry: Type[ContainerImageManifestListEntry]):
+    def from_manifest_list_entry(entry: ContainerImageManifestListEntry):
         """
         Converts a generic ContainerImageManifestListEntry into an OCI image
         index entry
 
         Args:
-        entry (Type[ContainerImageManifestListEntry]): The generic entry
+        entry (ContainerImageManifestListEntry): The generic entry
 
         Returns:
-        Type[ContainerImageIndexEntryOCI]: The OCI image index entry
+        ContainerImageIndexEntryOCI: The OCI image index entry
         """
         return ContainerImageIndexEntryOCI(entry.entry)
 
@@ -191,3 +198,133 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
         return ContainerImageIndexEntryOCI.validate_static(
             self.entry
         )
+
+"""
+ContainerImageIndexOCI class
+
+Represents an OCI image index returned from the distribution registry API.
+Contains validation logic and getters for image index metadata following the
+OCI image index specification.
+"""
+class ContainerImageIndexOCI(ContainerImageManifestList):
+    @staticmethod
+    def validate_static(manifest_list: Dict[str, Any]) -> Tuple[bool, str]:
+        """
+        Validates an OCI image index
+
+        Args:
+        manifest_list (Dict[str, Any]): The image index to validate
+
+        Returns:
+        Tuple[bool, str]: Whether the image index valid, error message
+        """
+        # Validate the image index
+        try:
+            validate(instance=manifest_list, schema=IMAGE_INDEX_OCI_SCHEMA)
+        except Exception as e:
+            return False, str(e)
+        
+        # Validate the image index entries
+        for entry in manifest_list["manifests"]:
+            entry_valid, err = ContainerImageIndexEntryOCI.validate_static(
+                entry
+            )
+            if not entry_valid:
+                return entry_valid, err
+        
+        # Validate the mediaType, if unsupported then error
+        if "mediaType" in manifest_list.keys():
+            if manifest_list["mediaType"] in UNSUPPORTED_OCI_INDEX_MEDIA_TYPES:
+                return False, f"Unsupported mediaType: {manifest_list['mediaType']}"
+
+        # Success if both valid
+        return True, ""
+    
+    @staticmethod
+    def from_manifest_list(
+            manifest_list: ContainerImageManifestList
+        ) -> "ContainerImageIndexOCI":
+        """
+        Convert a ContainerImageManifestList to an OCI image index instance
+
+        Args:
+        manifest_list ContainerImageManifestList: The generic manifest
+            list instance
+        
+        Returns:
+        ContainerImageIndexOCI: The OCI image index instance
+        """
+        return ContainerImageIndexOCI(manifest_list.manifest_list)
+
+    def __init__(self, index: Dict[str, Any]):
+        """
+        Constructor for the ContainerImageIndexOCI class
+
+        Args:
+        manifest_list (Dict[str, Any]): The image index loaded into a dict
+        """
+        # Validate the image index
+        valid, err = ContainerImageIndexOCI.validate_static(index)
+        if not valid:
+            raise ValidationError(err)
+
+        # If both valid, instantiate the image index
+        super().__init__(index)
+
+    def validate(self) -> Tuple[bool, str]:
+        """
+        Validates an OCI image index instance
+
+        Args:
+        None
+
+        Returns:
+        Tuple[bool, str]: Whether the image index is valid, error message
+        """
+        # Validate the image manifest list
+        return ContainerImageIndexOCI.validate_static(
+            self.manifest_list
+        )
+
+    def get_oci_entries(self) -> List[
+            ContainerImageIndexEntryOCI
+        ]:
+        """
+        Returns the manifest list entries as ContainerImageIndexEntryOCI
+        instances
+
+        Args:
+        None
+
+        Returns:
+        List[ContainerImageIndexEntryOCI]: The entries
+        """
+        entries = self.get_entries()
+        for i in range(len(entries)):
+            # Convert each entry to an OCI entry
+            entries[i] = ContainerImageIndexEntryOCI.from_manifest_list_entry(
+                entries[i]
+            )
+        return entries
+
+    def get_oci_manifests(
+            self, name: str, auth: Dict[str, Any]
+        ) -> List[ContainerImageManifestOCI]:
+        """
+        Fetches the arch manifests from the distribution registry API and
+        returns as a list of ContainerImageManifestOCI instances
+
+        Args:
+        name (str): A valid image name, the name of the manifest
+        auth (Dict[str, Any]): A valid docker config JSON dict
+
+        Returns:
+        List[ContainerImageManifestOCI]: The arch manifests
+        """
+        manifests = self.get_manifests(name, auth)
+        for i in range(len(manifests)):
+            # Convert each manifest to an OCI manifest
+            manifests[i] = ContainerImageManifestOCI.from_manifest(
+                manifests[i]
+            )
+        return manifests

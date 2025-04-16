@@ -14,21 +14,10 @@ sys.path.insert(
 # End Hack
 ######
 
-import json
+from image.auth import AUTH
 from image.containerimage import ContainerImage
 from image.descriptor import ContainerImageDescriptor
 from typing import List, Tuple, Dict, Any
-
-# Auth file constants & env vars
-if sys.platform == "linux":
-    AUTH_FILE_PATH_DEFAULT = os.path.expandvars(
-        "$XDG_RUNTIME_DIR/containers/auth.json"
-    )
-else:
-    AUTH_FILE_PATH_DEFAULT = os.path.expandvars(
-        "$HOME/.config/containers/auth.json"
-    )
-AUTH_FILE_PATH = os.environ.get("AUTH_FILE_PATH", AUTH_FILE_PATH_DEFAULT)
 
 # Source and target image ref env vars
 SOURCE_IMAGE_REF = os.environ.get(
@@ -39,11 +28,6 @@ TARGET_IMAGE_REF = os.environ.get(
     "TARGET_IMAGE_REF",
     "registry.k8s.io/pause:3.9"
 )
-
-# Load auth file
-AUTH = {}
-with open(AUTH_FILE_PATH, 'r') as auth_file:
-    AUTH = json.load(auth_file)
 
 # Initialize source and target container image objects
 source_image: ContainerImage = ContainerImage(SOURCE_IMAGE_REF)

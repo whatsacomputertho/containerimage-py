@@ -1,5 +1,6 @@
 import copy
 from jsonschema                 import  ValidationError
+from image.errors               import  ContainerImageError
 from image.oci                  import  ContainerImageManifestOCI
 from image.v2s2                 import  ContainerImageManifestV2S2
 from image.containerimage       import  ContainerImageManifestFactory, \
@@ -279,7 +280,7 @@ def test_container_image_manifest_factory_create():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
     # Ensure v2s2 manifest list is created when valid v2s2 manifest list is passed
     manifest_list = ContainerImageManifestFactory.create(
