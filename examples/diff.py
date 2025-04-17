@@ -34,6 +34,60 @@ source_image: ContainerImage = ContainerImage(SOURCE_IMAGE_REF)
 target_image: ContainerImage = ContainerImage(TARGET_IMAGE_REF)
 
 def get_manifest_diff(
+        list: ContainerImage,
+        arch: ContainerImage,
+        auth: Dict[str, Any]
+    ) -> Tuple[
+        List[ContainerImage], # Manifests unique to list
+        List[ContainerImage], # Manifests unique to arch
+        List[ContainerImage]  # Common manifests
+    ]:
+    """
+    Compare a manifest list with a manifest for common manifests
+    """
+    # Fetch and compare the source and target raw manifests
+    list_mf = list.get_manifest(auth=auth)
+    arch_mf = arch.get_manifest(auth=auth)
+
+    # If list is not a manifest list, or manifest is not a manifest, fail
+    if not ContainerImage.is_manifest_list_static(list_mf):
+        raise Exception(f"Not a manifest list: {str(list)}")
+    if ContainerImage.is_manifest_list_static(arch_mf):
+        raise Exception(f"Got manifest list, expected manifest: {str(arch)}")
+    
+    # Get the arch manifest digest and platform
+    arch_dig = arch.get_digest(auth=auth)
+    arch_plt = arch.get_platforms(auth=auth)[0]
+
+    # Check if the manifest list contains this manifest
+    arch_unique_mfs = []
+    list_unique_mfs = []
+    common_mfs = []
+    list_entries = list_mf.get_entries()
+    for list_entry in list_entries:
+        list_entry_dig = list_entry.get_digest()
+        list_entry_plt = list_entry.get_platform()
+        if list_entry_plt != arch_plt:
+            list_unique_mfs.append(
+                ContainerImage(
+                    f"{list.get_name()}@{list_entry_dig}"
+                )
+            )
+        elif list_entry_dig == arch_dig:
+            common_mfs.append(
+                ContainerImage(
+                    f"{list.get_name()}@{list_entry_dig}"
+                )
+            )
+    if len(common_mfs) == 0:
+        arch_unique_mfs.append(
+            ContainerImage(
+                f"{arch.get_name()}@{arch_dig}"
+            )
+        )
+    return list_unique_mfs, arch_unique_mfs, common_mfs
+
+def get_manifest_list_diff(
         src: ContainerImage,
         tgt: ContainerImage,
         auth: Dict[str, Any]
@@ -42,6 +96,9 @@ def get_manifest_diff(
         List[ContainerImage], # Manifests unique to tgt
         List[ContainerImage]  # Common manifests
     ]:
+    """
+    Compare two manifest lists for common manifests
+    """
     # Fetch and compare the source and target raw manifests
     src_mf = src.get_manifest(auth=auth)
     tgt_mf = tgt.get_manifest(auth=auth)
@@ -95,6 +152,9 @@ def get_layer_diff(
         List[ContainerImageDescriptor],
         List[ContainerImageDescriptor]
     ]:
+    """
+    Compare two arch manifests for common layers
+    """
     # Fetch and compare the source and target raw manifests
     src_mf = src.get_manifest(auth=auth)
     tgt_mf = tgt.get_manifest(auth=auth)
@@ -109,7 +169,7 @@ def get_layer_diff(
             f"Got manifest list, expected manifest: {str(tgt)}"
         )
     
-    # 
+    # Check if the manifests share any layers in common
     src_unique_layers = []
     tgt_unique_layers = []
     common_layers = []
@@ -150,14 +210,54 @@ if ((not is_source_list) and is_target_list):
         f"{str(source_image)} is a manifest"
     )
 
-    # TODO: Finish
+    # Check for common manifest
+    (
+        list_unique_manifests,
+        arch_unique_manifests,
+        common_manifests
+    ) = get_manifest_diff(
+        target_image,
+        source_image,
+        auth=AUTH
+    )
+    print("Common manifests:")
+    for common_mf in common_manifests:
+        print(f"- ({(str(common_mf.get_platforms(auth=AUTH)[0]))}) {str(common_mf)}")
+    print()
+    print(f"Manifests unique to {str(target_image)}:")
+    for source_mf in list_unique_manifests:
+        print(f"- ({(str(source_mf.get_platforms(auth=AUTH)[0]))}) {str(source_mf)}")
+    print()
+    print(f"Manifests unique to {str(source_image)}:")
+    for target_mf in arch_unique_manifests:
+        print(f"- ({(str(target_mf.get_platforms(auth=AUTH)[0]))}) {str(target_mf)}")
 elif (is_source_list and (not is_target_list)):
     print(
         f"{str(source_image)} is a manifest list but " + \
         f"{str(target_image)} is a manifest"
     )
 
-    # TODO: Finish
+    # Check for common manifest
+    (
+        list_unique_manifests,
+        arch_unique_manifests,
+        common_manifests
+    ) = get_manifest_diff(
+        source_image,
+        target_image,
+        auth=AUTH
+    )
+    print("Common manifests:")
+    for common_mf in common_manifests:
+        print(f"- ({(str(common_mf.get_platforms(auth=AUTH)[0]))}) {str(common_mf)}")
+    print()
+    print(f"Manifests unique to {str(source_image)}:")
+    for source_mf in list_unique_manifests:
+        print(f"- ({(str(source_mf.get_platforms(auth=AUTH)[0]))}) {str(source_mf)}")
+    print()
+    print(f"Manifests unique to {str(target_image)}:")
+    for target_mf in arch_unique_manifests:
+        print(f"- ({(str(target_mf.get_platforms(auth=AUTH)[0]))}) {str(target_mf)}")
 elif is_source_list and is_target_list:
     print(
         f"{str(source_image)} and {str(target_image)} are " + \
@@ -169,7 +269,7 @@ elif is_source_list and is_target_list:
         source_unique_manifests,
         target_unique_manifests,
         common_manifests
-    ) = get_manifest_diff(
+    ) = get_manifest_list_diff(
         src=source_image,
         tgt=target_image,
         auth=AUTH

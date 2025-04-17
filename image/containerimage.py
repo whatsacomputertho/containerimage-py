@@ -134,7 +134,7 @@ class ContainerImage(ContainerImageReference):
         return ContainerImageRegistryClient.get_digest(self, auth)
     
     def get_platforms(self, auth: Dict[str, Any]) -> List[
-            Type[ContainerImagePlatform]
+            ContainerImagePlatform
         ]:
         """
         Returns the supported platform(s) for the image as a list of
@@ -144,7 +144,7 @@ class ContainerImage(ContainerImageReference):
         auth (Dict[str, Any]): A valid docker config JSON
 
         Returns:
-        List[Type[ContainerImagePlatform]]: The supported platforms
+        List[ContainerImagePlatform]: The supported platforms
         """
         # If manifest, get the config and get its platform
         manifest = self.get_manifest(auth)

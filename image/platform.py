@@ -184,3 +184,17 @@ class ContainerImagePlatform:
         Dict[str, Any]: The ContainerImagePlatform as a JSON dictionary
         """
         return dict(self.platform)
+
+    def __eq__(self, plt: "ContainerImagePlatform") -> bool:
+        """
+        Compare two ContainerImagePlatforms for equality
+
+        Args:
+        plt (ContainerImagePlatform): The other platform
+
+        Returns:
+        bool: Whether the two platforms are equal
+        """
+        if isinstance(plt, ContainerImagePlatform):
+            return str(self) == str(plt)
+        return False
