@@ -1,17 +1,24 @@
 import re
-from typing import Dict, Any, Tuple, Type
+from typing import Dict, Any, Tuple, List
 from jsonschema import validate, ValidationError
 from image.descriptor           import  ContainerImageDescriptor
 from image.manifest             import  ContainerImageManifest
+from image.manifestlist         import  ContainerImageManifestList
 from image.manifestlistentry    import  ContainerImageManifestListEntry
+from image.mediatypes           import  OCI_INDEX_MEDIA_TYPE, \
+                                        OCI_MANIFEST_MEDIA_TYPE
 from image.platform             import  ContainerImagePlatform
 from image.regex                import  ANCHORED_DIGEST
 from image.v2s2schema           import  MANIFEST_V2_SCHEMA, \
+                                        MANIFEST_LIST_V2_SCHEMA, \
                                         MANIFEST_LIST_V2_ENTRY_SCHEMA
 
 # A list of mediaTypes which are not supported by the v2s2 manifest spec
-UNSUPPORTED_MEDIA_TYPES = [
-    "application/vnd.oci.image.manifest.v1+json"
+UNSUPPORTED_V2S2_MANIFEST_MEDIA_TYPES = [
+    OCI_MANIFEST_MEDIA_TYPE
+]
+UNSUPPORTED_V2S2_MANIFEST_LIST_MEDIA_TYPES = [
+    OCI_INDEX_MEDIA_TYPE
 ]
 
 """
@@ -53,19 +60,19 @@ class ContainerImageManifestV2S2(ContainerImageManifest):
                 return layer_valid, err
         
         # Validate the mediaType
-        if manifest["mediaType"] in UNSUPPORTED_MEDIA_TYPES:
+        if manifest["mediaType"] in UNSUPPORTED_V2S2_MANIFEST_MEDIA_TYPES:
             return False, f"Unsupported mediaType: {manifest['mediaType']}"
 
         # If all are valid, return True with empty error message
         return True, ""
     
     @staticmethod
-    def from_manifest(manifest: Type[ContainerImageManifest]):
+    def from_manifest(manifest: ContainerImageManifest):
         """
         Convert a ContainerImageManifest to a v2s2 manifest instance
 
         Args:
-        manifest_list Type[ContainerImageManifest]: The generic manifest
+        manifest_list ContainerImageManifest: The generic manifest
             instance
         
         Returns:
@@ -139,20 +146,20 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
             return platform_valid, err
         
         # If the mediaType is unsupported, then error
-        if entry["mediaType"] in UNSUPPORTED_MEDIA_TYPES:
+        if entry["mediaType"] in UNSUPPORTED_V2S2_MANIFEST_MEDIA_TYPES:
             return False, f"Unsupported mediaType: {entry['mediaType']}"
 
         # Valid if all of the above are valid
         return True, ""
 
     @staticmethod
-    def from_manifest_list_entry(entry: Type[ContainerImageManifestListEntry]):
+    def from_manifest_list_entry(entry: ContainerImageManifestListEntry):
         """
         Convert a ContainerImageManifestListEntry to a v2s2 manifest list entry
         instance
 
         Args:
-        manifest_list Type[ContainerImageManifestList]: The generic manifest
+        manifest_list ContainerImageManifestList: The generic manifest
             list entry instance
         
         Returns:
@@ -192,3 +199,132 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         return ContainerImageManifestListEntryV2S2.validate_static(
             self.entry
         )
+
+"""
+ContainerImageManifestListV2S2 class
+
+Represents a manifest list returned from the distribution registry API.
+Contains validation logic and getters for manifest list metadata following the
+manifest v2s2 specification.
+"""
+class ContainerImageManifestListV2S2(ContainerImageManifestList):
+    @staticmethod
+    def validate_static(manifest_list: Dict[str, Any]) -> Tuple[bool, str]:
+        """
+        Validates an image manifest list
+
+        Args:
+        manifest_list (Dict[str, Any]): The manifest list to validate
+
+        Returns:
+        Tuple[bool, str]: Whether the manifest list is valid, error message
+        """
+        # Validate the image manifest list
+        try:
+            validate(instance=manifest_list, schema=MANIFEST_LIST_V2_SCHEMA)
+        except Exception as e:
+            return False, str(e)
+        
+        # Validate the manifest list entries
+        for entry in manifest_list["manifests"]:
+            entry_valid, err = ContainerImageManifestListEntryV2S2.validate_static(
+                entry
+            )
+            if not entry_valid:
+                return entry_valid, err
+        
+        # Validate the mediaType, if unsupported then error
+        if manifest_list["mediaType"] in UNSUPPORTED_V2S2_MANIFEST_LIST_MEDIA_TYPES:
+            return False, f"Unsupported mediaType: {manifest_list['mediaType']}"
+
+        # Success if both valid
+        return True, ""
+    
+    @staticmethod
+    def from_manifest_list(
+            manifest_list: ContainerImageManifestList
+        ) -> "ContainerImageManifestListV2S2":
+        """
+        Convert a ContainerImageManifestList to a v2s2 manifest list instance
+
+        Args:
+        manifest_list ContainerImageManifestList: The generic manifest
+            list instance
+        
+        Returns:
+        ContainerImageManifestListV2S2: The v2s2 manifest list instance
+        """
+        return ContainerImageManifestListV2S2(manifest_list.manifest_list)
+
+    def __init__(self, manifest_list: Dict[str, Any]):
+        """
+        Constructor for the ContainerImageManifestListV2S2 class
+
+        Args:
+        manifest_list (Dict[str, Any]): The manifest list loaded into a dict
+        """
+        # Validate the image manifest list
+        valid, err = ContainerImageManifestListV2S2.validate_static(manifest_list)
+        if not valid:
+            raise ValidationError(err)
+
+        # If both valid, instantiate the manifest list
+        super().__init__(manifest_list)
+
+    def validate(self) -> Tuple[bool, str]:
+        """
+        Validates an image manifest list instance
+
+        Args:
+        None
+
+        Returns:
+        Tuple[bool, str]: Whether the manifest list is valid, error message
+        """
+        # Validate the image manifest list
+        return ContainerImageManifestListV2S2.validate_static(
+            self.manifest_list
+        )
+
+    def get_v2s2_entries(self) -> List[
+            ContainerImageManifestListEntryV2S2
+        ]:
+        """
+        Returns the manifest list entries as ContainerImageManifestListEntryV2S2
+        instances
+
+        Args:
+        None
+
+        Returns:
+        List[ContainerImageManifestListEntryV2S2]: The entries
+        """
+        entries = self.get_entries()
+        for i in range(len(entries)):
+            # Convert each entry to a v2s2 entry
+            entries[i] = ContainerImageManifestListEntryV2S2.from_manifest_list_entry(
+                entries[i]
+            )
+        return entries
+
+    def get_v2s2_manifests(
+            self, name: str, auth: Dict[str, Any]
+        ) -> List[ContainerImageManifestV2S2]:
+        """
+        Fetches the arch manifests from the distribution registry API and
+        returns as a list of ContainerImageManifestV2S2s
+
+        Args:
+        name (str): A valid image name, the name of the manifest
+        auth (Dict[str, Any]): A valid docker config JSON dict
+
+        Returns:
+        List[ContainerImageManifestV2S2]: The arch manifests
+        """
+        manifests = self.get_manifests(name, auth)
+        for i in range(len(manifests)):
+            # Convert each manifest to a v2s2 manifest
+            manifests[i] = ContainerImageManifestV2S2.from_manifest(
+                manifests[i]
+            )
+        return manifests

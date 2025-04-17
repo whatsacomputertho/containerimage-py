@@ -1,6 +1,6 @@
 import json
-from jsonschema                 import  ValidationError
 from image.byteunit             import  ByteUnit
+from image.errors               import  ContainerImageError
 from image.v2s2                 import  ContainerImageManifestV2S2
 from image.oci                  import  ContainerImageManifestOCI
 from image.containerimage       import  ContainerImage, \
@@ -70,7 +70,7 @@ def test_container_image_instantiation():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
     # Ensure a ContainerImage is returned if valid
     image = ContainerImage("this.is/a/valid/image:v1.2.3")
@@ -127,7 +127,7 @@ def test_container_image_is_digest_ref():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_is_tag_ref():
     # Ensure a tag ref is a tag ref
@@ -165,7 +165,7 @@ def test_container_image_is_tag_ref():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_get_identifier():
     # Ensure identifier matches for tag ref
@@ -205,7 +205,7 @@ def test_container_image_get_identifier():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_get_name():
     # Ensure name matches for tag ref
@@ -248,7 +248,7 @@ def test_container_image_get_name():
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_get_manifest(mocker):
     mocker.patch(
@@ -288,7 +288,7 @@ def test_container_image_get_manifest(mocker):
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_is_manifest_list(mocker):
     mocker.patch(
@@ -328,7 +328,7 @@ def test_container_image_is_manifest_list(mocker):
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_get_size(mocker):
     mocker.patch(
@@ -418,7 +418,7 @@ def test_container_image_get_size(mocker):
     except Exception as e:
         exc = e
     assert exc != None
-    assert isinstance(exc, ValidationError)
+    assert isinstance(exc, ContainerImageError)
 
 def test_container_image_delete(mocker):
     mock_response = mocker.MagicMock()
