@@ -35,10 +35,10 @@ class ContainerImageManifestV2S2(ContainerImageManifest):
         Validates an image manifest
 
         Args:
-        manifest (Dict[str, Any]): The manifest to validate
+            manifest (Dict[str, Any]): The manifest to validate
 
         Returns:
-        Tuple[bool, str]: Whether the manifest is valid, error message
+            Tuple[bool, str]: Whether the manifest is valid, error message
         """
         # Validate the image manifest
         try:
@@ -72,11 +72,10 @@ class ContainerImageManifestV2S2(ContainerImageManifest):
         Convert a ContainerImageManifest to a v2s2 manifest instance
 
         Args:
-        manifest_list ContainerImageManifest: The generic manifest
-            instance
+            manifest_list (ContainerImageManifest): The generic manifest instance
         
         Returns:
-        ContainerImageManifestV2S2: The v2s2 manifest instance
+            ContainerImageManifestV2S2: The v2s2 manifest instance
         """
         return ContainerImageManifestV2S2(manifest.manifest)
 
@@ -85,7 +84,7 @@ class ContainerImageManifestV2S2(ContainerImageManifest):
         Constructor for the ContainerImageManifestV2S2 class
 
         Args:
-        manifest (Dict[str, Any]): The manifest loaded into a dict
+            manifest (Dict[str, Any]): The manifest loaded into a dict
         """
         # Validate the image manifest
         valid, err = ContainerImageManifestV2S2.validate_static(manifest)
@@ -99,11 +98,8 @@ class ContainerImageManifestV2S2(ContainerImageManifest):
         """
         Validates an image manifest instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the manifest is valid, error message
+            Tuple[bool, str]: Whether the manifest is valid, error message
         """
         # Validate the image manifest
         return ContainerImageManifestV2S2.validate_static(self.manifest)
@@ -122,10 +118,10 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         Validates an image manifest list entry
 
         Args:
-        entry (Dict[str, Any]): The manifest list entry to validate
+            entry (Dict[str, Any]): The manifest list entry to validate
 
         Returns:
-        Tuple[bool, str]: Whether the manifest list entry is valid, error msg
+            Tuple[bool, str]: Whether the manifest list entry is valid, error msg
         """
         # Validate the image manifest list entry
         try:
@@ -159,12 +155,10 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         instance
 
         Args:
-        manifest_list ContainerImageManifestList: The generic manifest
-            list entry instance
+            manifest_list (ContainerImageManifestList): The generic manifest list entry instance
         
         Returns:
-        ContainerImageManifestListEntryV2S2: The v2s2 manifest list entry
-            instance
+            ContainerImageManifestListEntryV2S2: The v2s2 manifest list entry instance
         """
         return ContainerImageManifestListEntryV2S2(entry.entry)
 
@@ -173,7 +167,7 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         Constructor for the ContainerImageManifestListEntryV2S2 class
 
         Args:
-        entry (Dict[str, Any]): The manifest list entry loaded into a dict
+            entry (Dict[str, Any]): The manifest list entry loaded into a dict
         """
         # Validate the image manifest list entry
         valid, err = ContainerImageManifestListEntryV2S2.validate_static(
@@ -189,11 +183,8 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         """
         Validates an image manifest list entry instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the manifest list entry is valid, error msg
+            Tuple[bool, str]: Whether the manifest list entry is valid, error msg
         """
         # Validate the image manifest list
         return ContainerImageManifestListEntryV2S2.validate_static(
@@ -214,10 +205,10 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         Validates an image manifest list
 
         Args:
-        manifest_list (Dict[str, Any]): The manifest list to validate
+            manifest_list (Dict[str, Any]): The manifest list to validate
 
         Returns:
-        Tuple[bool, str]: Whether the manifest list is valid, error message
+            Tuple[bool, str]: Whether the manifest list is valid, error message
         """
         # Validate the image manifest list
         try:
@@ -248,11 +239,10 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         Convert a ContainerImageManifestList to a v2s2 manifest list instance
 
         Args:
-        manifest_list ContainerImageManifestList: The generic manifest
-            list instance
+            manifest_list ContainerImageManifestList: The generic manifest list instance
         
         Returns:
-        ContainerImageManifestListV2S2: The v2s2 manifest list instance
+            ContainerImageManifestListV2S2: The v2s2 manifest list instance
         """
         return ContainerImageManifestListV2S2(manifest_list.manifest_list)
 
@@ -261,7 +251,7 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         Constructor for the ContainerImageManifestListV2S2 class
 
         Args:
-        manifest_list (Dict[str, Any]): The manifest list loaded into a dict
+            manifest_list (Dict[str, Any]): The manifest list loaded into a dict
         """
         # Validate the image manifest list
         valid, err = ContainerImageManifestListV2S2.validate_static(manifest_list)
@@ -275,11 +265,8 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         """
         Validates an image manifest list instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the manifest list is valid, error message
+            Tuple[bool, str]: Whether the manifest list is valid, error message
         """
         # Validate the image manifest list
         return ContainerImageManifestListV2S2.validate_static(
@@ -293,11 +280,8 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         Returns the manifest list entries as ContainerImageManifestListEntryV2S2
         instances
 
-        Args:
-        None
-
         Returns:
-        List[ContainerImageManifestListEntryV2S2]: The entries
+            List[ContainerImageManifestListEntryV2S2]: The entries
         """
         entries = self.get_entries()
         for i in range(len(entries)):
@@ -315,11 +299,11 @@ class ContainerImageManifestListV2S2(ContainerImageManifestList):
         returns as a list of ContainerImageManifestV2S2s
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        List[ContainerImageManifestV2S2]: The arch manifests
+            List[ContainerImageManifestV2S2]: The arch manifests
         """
         manifests = self.get_manifests(name, auth)
         for i in range(len(manifests)):

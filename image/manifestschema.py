@@ -1,12 +1,4 @@
-"""
-The JSON schema for validating manifest descriptors
-Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md
-
-This JSON schema is a superset of the v2s2 config & layer schemas, which
-are effectively just descriptors.  Hence, we reuse this schema across both
-v2s2 layers / configs, and OCI descriptors
-Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
-"""
+# See doc comments below
 MANIFEST_DESCRIPTOR_SCHEMA = {
     "type": "object",
     "description": "An OCI image consists of several different " + \
@@ -59,16 +51,19 @@ MANIFEST_DESCRIPTOR_SCHEMA = {
         }
     }
 }
-
 """
-The JSON schema for validating OCI image index entry platforms
-Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md
+The JSON schema for validating manifest descriptors
+Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md
 
-This JSON schema is identical to the v2s2 platform JSON schema for manifest
-list entries.  Hence, we reuse this schema across both v2s2 manifest lists,
-and OCI image indexes.
+This JSON schema is a superset of the v2s2 config & layer schemas, which
+are effectively just descriptors.  Hence, we reuse this schema across both
+v2s2 layers / configs, and OCI descriptors
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
+
+# See doc comments below
 IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA = {
     "type": "object",
     "description": "This OPTIONAL property describes the minimum " + \
@@ -129,3 +124,14 @@ IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for validating OCI image index entry platforms
+Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md
+
+This JSON schema is identical to the v2s2 platform JSON schema for manifest
+list entries.  Hence, we reuse this schema across both v2s2 manifest lists,
+and OCI image indexes.
+Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
+"""

@@ -1,4 +1,4 @@
-![containerimage-py](./doc/images/container-image-py.png)
+![containerimage-py](./doc/source/_static/container-image-py.png)
 
 # containerimage-py
 

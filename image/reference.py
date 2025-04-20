@@ -7,23 +7,21 @@ from image.regex    import  REFERENCE_PAT, \
                             ANCHORED_DOMAIN
 from typing         import  Tuple, Dict, Any
 
-"""
-ContainerImageReference class
-
-Represents a container image reference. Contains logic for validating and
-parsing container image references.
-"""
 class ContainerImageReference:
+    """
+    Represents a container image reference. Contains logic for validating and
+    parsing container image references.
+    """
     @staticmethod
     def validate_static(ref: str) -> Tuple[bool, str]:
         """
         Validates an image reference
 
         Args:
-        ref (str): The image reference
+            ref (str): The image reference
 
         Returns:
-        Tuple[bool, str]: Whether the reference is valid, error message
+            Tuple[bool, str]: Whether the reference is valid, error message
         """
         valid = bool(re.match(REFERENCE_PAT, ref))
         if not valid:
@@ -35,7 +33,7 @@ class ContainerImageReference:
         Constructor for the ContainerImage class
 
         Args:
-        ref (str): The image reference
+            ref (str): The image reference
         """
         # Validate the image reference
         valid, err = ContainerImageReference.validate_static(ref)
@@ -49,11 +47,8 @@ class ContainerImageReference:
         """
         Validates an image reference
 
-        Args:
-        None
-
         Returns:
-        bool: Whether the ContainerImage's reference is valid
+            bool: Whether the ContainerImage's reference is valid
         """
         return ContainerImageReference.validate_static(self.ref)
 
@@ -61,11 +56,8 @@ class ContainerImageReference:
         """
         Determines if the image reference is a digest reference
 
-        Args:
-        None
-
         Returns:
-        bool: Whether the image is a digest reference
+            bool: Whether the image is a digest reference
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -84,11 +76,8 @@ class ContainerImageReference:
         """
         Determine if the image reference is a tag reference
 
-        Args:
-        None
-
         Returns:
-        bool: Whether the image is a tag referenece
+            bool: Whether the image is a tag referenece
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -110,11 +99,8 @@ class ContainerImageReference:
         Gets the image identifier, which can be either a tag or a digest,
         based on whether the image is a tag or digest ref
 
-        Args:
-        None
-
         Returns:
-        str: The image identifier, either a tag or digest
+            str: The image identifier, either a tag or digest
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -137,11 +123,8 @@ class ContainerImageReference:
         Gets the image name, which is the image registry and path but without
         an identifier (tag or digest)
 
-        Args:
-        None
-
         Returns:
-        str: The image name
+            str: The image name
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -162,11 +145,8 @@ class ContainerImageReference:
         """
         Gets the image registry domain from the image reference
 
-        Args:
-        None
-
         Returns:
-        str: The image registry domain
+            str: The image registry domain
         """
         # Get the image name
         name = self.get_name()
@@ -185,11 +165,8 @@ class ContainerImageReference:
         Gets the image path from the image name.  This is the path only,
         with no inclusion of the registry domain.
 
-        Args:
-        None
-
         Returns:
-        str: The image path
+            str: The image path
         """
         # Get the image name
         name = self.get_name()
@@ -207,11 +184,8 @@ class ContainerImageReference:
         following the final forward slash.  For example, for image name
         "ingress-nginx/controller", the image short name is just "controller"
 
-        Args:
-        None
-
         Returns:
-        str: The image short name
+            str: The image short name
         """
         return self.get_name().split("/")[-1]
     
@@ -219,11 +193,8 @@ class ContainerImageReference:
         """
         Formats the ContainerImage as a string
 
-        Args:
-        None
-
         Returns:
-        str: The ContainerImage as a string
+            str: The ContainerImage as a string
         """
         return self.ref
 
@@ -231,10 +202,7 @@ class ContainerImageReference:
         """
         Formats the ContainerImage as a JSON dict
 
-        Args:
-        None
-
         Returns:
-        Dict[str, Any]: The ContainerImage as a JSON dict
+            Dict[str, Any]: The ContainerImage as a JSON dict
         """
         return { "ref": self.ref }

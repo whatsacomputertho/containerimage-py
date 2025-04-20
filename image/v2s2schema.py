@@ -4,6 +4,8 @@ from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA, \
 """
 The JSON schema for validating v2s2 manifest list entries (manifests)
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_LIST_V2_ENTRY_SCHEMA = {
     "type": "object",
@@ -37,6 +39,8 @@ MANIFEST_LIST_V2_ENTRY_SCHEMA = {
 """
 The JSON schema for validating v2s2 manifest lists
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_LIST_V2_SCHEMA = {
     "type": "object",
@@ -71,6 +75,8 @@ MANIFEST_LIST_V2_SCHEMA = {
 """
 The JSON schema for validaing v2s2 manifests
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_V2_SCHEMA = {
     "type": "object",

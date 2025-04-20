@@ -2,27 +2,25 @@ from typing                 import Dict, Any, Tuple, Union, List
 from jsonschema             import validate, ValidationError
 from image.manifestschema   import IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA
 
-"""
-ContainerImagePlatform class
-
-Represents platform metadata, which is generally specified in an OCI image
-index / v2s2 manifest list entry. Contains validation logic and getters for
-platform metadata following the OCI and v2s2 specifications.
-
-Note that the OCI and v2s2 specifications do not diverge in their schema for
-platform metadata, hence we reuse this class across both scenarios.
-"""
 class ContainerImagePlatform:
+    """
+    Represents platform metadata, which is generally specified in an OCI image
+    index / v2s2 manifest list entry. Contains validation logic and getters for
+    platform metadata following the OCI and v2s2 specifications.
+
+    Note that the OCI and v2s2 specifications do not diverge in their schema for
+    platform metadata, hence we reuse this class across both scenarios.
+    """
     @staticmethod
     def validate_static(platform: Dict[str, Any]) -> Tuple[bool, str]:
         """
         Validates image platform metadata from an image index entry
 
         Args:
-        platform (Dict[str, Any]): The platform metadata to validate
+            platform (Dict[str, Any]): The platform metadata to validate
 
         Returns:
-        Tuple[bool, str]: Whether the platform metadata is valid, error msg
+            Tuple[bool, str]: Whether the platform metadata is valid, error msg
         """
         # Validate the platform metadata
         try:
@@ -39,7 +37,7 @@ class ContainerImagePlatform:
         Constructor for the ContainerImagePlatform class
 
         Args:
-        platform (Dict[str, Any]): The platform metadata loaded into a dict
+            platform (Dict[str, Any]): The platform metadata loaded into a dict
         """
         # Validate the platform metadata
         valid, err = ContainerImagePlatform.validate_static(
@@ -55,11 +53,8 @@ class ContainerImagePlatform:
         """
         Validates a ContainerImagePlatform instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether platform metadata is valid, error message
+            Tuple[bool, str]: Whether platform metadata is valid, error message
         """
         # Validate the platform metadata
         return ContainerImagePlatform.validate_static(
@@ -70,11 +65,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's architecture
 
-        Args:
-        None
-
         Returns:
-        str: The platform architecture
+            str: The platform architecture
         """
         arch = self.platform.get("architecture")
         if arch == None:
@@ -85,11 +77,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's operating system name
 
-        Args:
-        None
-
         Returns:
-        str: The platform operating system name
+            str: The platform operating system name
         """
         os = self.platform.get("os")
         if os == None:
@@ -100,11 +89,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's operating system version, None if not found
 
-        Args:
-        None
-
         Returns:
-        Union[str, None]: The platform os version, None if not found
+            Union[str, None]: The platform os version, None if not found
         """
         os_ver = self.platform.get("os.version")
         if os_ver == None:
@@ -115,11 +101,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's operating system features, None if not found
 
-        Args:
-        None
-
         Returns:
-        Union[List[str], None]: The os features list, None if not found
+            Union[List[str], None]: The os features list, None if not found
         """
         os_features = self.platform.get("os.features")
         if os_features == None:
@@ -130,11 +113,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's variant, None if not found
 
-        Args:
-        None
-
         Returns:
-        Union[str, None]: The platform variant, None if not found
+            Union[str, None]: The platform variant, None if not found
         """
         variant = self.platform.get("variant")
         if variant == None:
@@ -145,11 +125,8 @@ class ContainerImagePlatform:
         """
         Returns the platform's features, None if not found
 
-        Args:
-        None
-
         Returns:
-        Union[List[str], None]: The features list, None if not found
+            Union[List[str], None]: The features list, None if not found
         """
         os_features = self.platform.get("features")
         if os_features == None:
@@ -161,11 +138,8 @@ class ContainerImagePlatform:
         Formats the ContainerImagePlatform as a string in the form
         <os>/<arch>[/<variant>]
 
-        Args:
-        None
-
         Returns:
-        str: The platform as a string
+            str: The platform as a string
         """
         plt_str = f"{self.get_os()}/{self.get_architecture()}"
         variant = self.get_variant()
@@ -177,11 +151,8 @@ class ContainerImagePlatform:
         """
         Formats the ContainerImagePlatform as a JSON dictionary
 
-        Args:
-        None
-
         Returns:
-        Dict[str, Any]: The ContainerImagePlatform as a JSON dictionary
+            Dict[str, Any]: The ContainerImagePlatform as a JSON dictionary
         """
         return dict(self.platform)
 
@@ -190,10 +161,10 @@ class ContainerImagePlatform:
         Compare two ContainerImagePlatforms for equality
 
         Args:
-        plt (ContainerImagePlatform): The other platform
+            plt (ContainerImagePlatform): The other platform
 
         Returns:
-        bool: Whether the two platforms are equal
+            bool: Whether the two platforms are equal
         """
         if isinstance(plt, ContainerImagePlatform):
             return str(self) == str(plt)

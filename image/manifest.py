@@ -2,35 +2,29 @@ import json
 from typing             import  Dict, Any, List, Type
 from image.descriptor   import  ContainerImageDescriptor
 
-"""
-ContainerImageManifest class
-
-Represents an arch manifest returned from the distribution registry API.
-This is a base class extended by the ContainerImageManifestV2S2 and
-ContainerImageManifestOCI since the two specs are very similar, with the
-v2s2 spec being more restrictive than the OCI spec.
-"""
 class ContainerImageManifest:
+    """
+    Represents an arch manifest returned from the distribution registry API.
+    This is a base class extended by the ContainerImageManifestV2S2 and
+    ContainerImageManifestOCI since the two specs are very similar, with the
+    v2s2 spec being more restrictive than the OCI spec.
+    """
     def __init__(self, manifest: Dict[str, Any]):
         """
         Constructor for the ContainerImageManifest class
 
         Args:
-        manifest (Dict[str, Any]): The manifest loaded into a dict
+            manifest (Dict[str, Any]): The manifest loaded into a dict
         """
         self.manifest = manifest
 
-    def get_layer_descriptors(self) -> List[Type[ContainerImageDescriptor]]:
+    def get_layer_descriptors(self) -> List[ContainerImageDescriptor]:
         """
         Returns a list of the container image's layer descriptors, defaults to
         empty list
 
-        Args:
-        None
-
         Returns:
-        List[Type[ContainerImageDescriptor]]: The container image's layer
-            descriptors
+            List[ContainerImageDescriptor]: The container image's layer descriptors
         """
         # Get the layers of the image manifest
         layer_meta_list = list(self.manifest.get("layers"))
@@ -48,12 +42,8 @@ class ContainerImageManifest:
         """
         Returns the container image manifest config descriptor
 
-        Args:
-        None
-
         Returns:
-        ContainerImageDescriptor: The container image manifest config
-            descriptor
+            ContainerImageDescriptor: The container image manifest config descriptor
         """
         # Get the container image manifest config
         config = dict(self.manifest.get("config"))
@@ -63,11 +53,8 @@ class ContainerImageManifest:
         """
         Returns the mediaType of the container image manifest
 
-        Args:
-        None
-
         Returns:
-        str: The container image manifest mediaType
+            str: The container image manifest mediaType
         """
         return str(self.manifest.get("mediaType"))
 
@@ -75,11 +62,8 @@ class ContainerImageManifest:
         """
         Returns the container image manifest size in bytes
 
-        Args:
-        None
-
         Returns:
-        int: The container image manifest size in bytes
+            int: The container image manifest size in bytes
         """
         # Get the config size
         config = self.get_config_descriptor()
@@ -105,11 +89,8 @@ class ContainerImageManifest:
         """
         Formats the ContainerImageManifest as a string
 
-        Args:
-        None
-
         Returns:
-        str: The ContainerImageManifest formatted as a string
+            str: The ContainerImageManifest formatted as a string
         """
         return json.dumps(self.manifest, indent=2, sort_keys=False)
 
@@ -117,10 +98,7 @@ class ContainerImageManifest:
         """
         Formats the ContainerImageManifest as a JSON dictionary
 
-        Args:
-        None
-
         Returns:
-        Dict[str, Any]: The ContainerImageManifest formatted as a JSON dict
+            Dict[str, Any]: The ContainerImageManifest formatted as a JSON dict
         """
         return self.manifest

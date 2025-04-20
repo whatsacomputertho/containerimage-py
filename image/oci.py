@@ -13,32 +13,40 @@ from image.ocischema            import  MANIFEST_OCI_SCHEMA, \
                                         IMAGE_INDEX_OCI_SCHEMA, \
                                         IMAGE_INDEX_ENTRY_OCI_SCHEMA
 
-# A list of mediaTypes which are not supported by the OCI manifest spec
+# See doc comments below
 UNSUPPORTED_OCI_INDEX_MEDIA_TYPES = [
     DOCKER_V2S2_LIST_MEDIA_TYPE
 ]
+"""
+A list of mediaTypes which are not supported by the OCI image index spec.
+This mainly just includes the Docker v2s2 manifest list mediaType.
+"""
+
+# See doc comments below
 UNSUPPORTED_OCI_MANIFEST_MEDIA_TYPES = [
     DOCKER_V2S2_MEDIA_TYPE
 ]
-
 """
-ContainerImageManifestOCI class
-
-Represents an arch manifest returned from the distribution registry API.
-Contains validation logic and getters for manifest metadata following the
-manifest OCI specification.
+A list of mediaTypes which are not supported by the OCI manifest spec.
+This mainly just includes the Docker v2s2 manifest mediaType.
 """
+
 class ContainerImageManifestOCI(ContainerImageManifest):
+    """
+    Represents an arch manifest returned from the distribution registry API.
+    Contains validation logic and getters for manifest metadata following the
+    manifest OCI specification.
+    """
     @staticmethod
     def validate_static(manifest: Dict[str, Any]) -> Tuple[bool, str]:
         """
         Validates an image manifest
 
         Args:
-        manifest (Dict[str, Any]): The manifest to validate
+            manifest (Dict[str, Any]): The manifest to validate
 
         Returns:
-        Tuple[bool, str]: Whether the manifest is valid, error message
+            Tuple[bool, str]: Whether the manifest is valid, error message
         """
         # Validate the image manifest
         try:
@@ -73,10 +81,10 @@ class ContainerImageManifestOCI(ContainerImageManifest):
         Converts a generic ContainerImageManifest into an OCI manifst instance
 
         Args:
-        manifest (ContainerImageManifest): The generic manifest
+            manifest (ContainerImageManifest): The generic manifest
 
         Returns:
-        ContainerImageManifestOCI: The OCI manifest instance
+            ContainerImageManifestOCI: The OCI manifest instance
         """
         return ContainerImageManifestOCI(manifest.manifest)
 
@@ -85,7 +93,7 @@ class ContainerImageManifestOCI(ContainerImageManifest):
         Constructor for the ContainerImageManifestOCI class
 
         Args:
-        manifest (Dict[str, Any]): The manifest loaded into a dict
+            manifest (Dict[str, Any]): The manifest loaded into a dict
         """
         # Validate the image manifest
         valid, err = ContainerImageManifestOCI.validate_static(manifest)
@@ -99,11 +107,8 @@ class ContainerImageManifestOCI(ContainerImageManifest):
         """
         Validates an image manifest instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the manifest is valid, error message
+            Tuple[bool, str]: Whether the manifest is valid, error message
         """
         # Validate the image manifest
         return ContainerImageManifestOCI.validate_static(self.manifest)
@@ -122,10 +127,10 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
         Validates an image index entry
 
         Args:
-        entry (Dict[str, Any]): The index entry to validate
+            entry (Dict[str, Any]): The index entry to validate
 
         Returns:
-        Tuple[bool, str]: Whether the index entry is valid, error msg
+            Tuple[bool, str]: Whether the index entry is valid, error msg
         """
         # Validate the image index entry
         try:
@@ -160,10 +165,10 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
         index entry
 
         Args:
-        entry (ContainerImageManifestListEntry): The generic entry
+            entry (ContainerImageManifestListEntry): The generic entry
 
         Returns:
-        ContainerImageIndexEntryOCI: The OCI image index entry
+            ContainerImageIndexEntryOCI: The OCI image index entry
         """
         return ContainerImageIndexEntryOCI(entry.entry)
 
@@ -172,7 +177,7 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
         Constructor for the ContainerImageIndexEntryOCI class
 
         Args:
-        entry (Dict[str, Any]): The index entry loaded into a dict
+            entry (Dict[str, Any]): The index entry loaded into a dict
         """
         # Validate the image index entry
         valid, err = ContainerImageIndexEntryOCI.validate_static(
@@ -188,11 +193,8 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
         """
         Validates an image index entry instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the index entry is valid, error msg
+            Tuple[bool, str]: Whether the index entry is valid, error msg
         """
         # Validate the image index
         return ContainerImageIndexEntryOCI.validate_static(
@@ -213,10 +215,10 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         Validates an OCI image index
 
         Args:
-        manifest_list (Dict[str, Any]): The image index to validate
+            manifest_list (Dict[str, Any]): The image index to validate
 
         Returns:
-        Tuple[bool, str]: Whether the image index valid, error message
+            Tuple[bool, str]: Whether the image index valid, error message
         """
         # Validate the image index
         try:
@@ -248,11 +250,10 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         Convert a ContainerImageManifestList to an OCI image index instance
 
         Args:
-        manifest_list ContainerImageManifestList: The generic manifest
-            list instance
+            manifest_list (ContainerImageManifestList): The generic manifest list instance
         
         Returns:
-        ContainerImageIndexOCI: The OCI image index instance
+            ContainerImageIndexOCI: The OCI image index instance
         """
         return ContainerImageIndexOCI(manifest_list.manifest_list)
 
@@ -261,7 +262,7 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         Constructor for the ContainerImageIndexOCI class
 
         Args:
-        manifest_list (Dict[str, Any]): The image index loaded into a dict
+            manifest_list (Dict[str, Any]): The image index loaded into a dict
         """
         # Validate the image index
         valid, err = ContainerImageIndexOCI.validate_static(index)
@@ -275,11 +276,8 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         """
         Validates an OCI image index instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the image index is valid, error message
+            Tuple[bool, str]: Whether the image index is valid, error message
         """
         # Validate the image manifest list
         return ContainerImageIndexOCI.validate_static(
@@ -293,11 +291,8 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         Returns the manifest list entries as ContainerImageIndexEntryOCI
         instances
 
-        Args:
-        None
-
         Returns:
-        List[ContainerImageIndexEntryOCI]: The entries
+            List[ContainerImageIndexEntryOCI]: The entries
         """
         entries = self.get_entries()
         for i in range(len(entries)):
@@ -315,11 +310,11 @@ class ContainerImageIndexOCI(ContainerImageManifestList):
         returns as a list of ContainerImageManifestOCI instances
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        List[ContainerImageManifestOCI]: The arch manifests
+            List[ContainerImageManifestOCI]: The arch manifests
         """
         manifests = self.get_manifests(name, auth)
         for i in range(len(manifests)):
