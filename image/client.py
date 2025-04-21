@@ -1,3 +1,9 @@
+"""
+Contains the ContainerImageRegistryClient class, which accepts and parses
+ContainerImageReference objects, then makes calls against the reference's
+distribution registry API.
+"""
+
 import hashlib
 import json
 import re
@@ -15,7 +21,6 @@ from image.reference    import  ContainerImageReference
 from image.regex        import  ANCHORED_DIGEST
 from typing             import  Dict, Tuple, Any, Union
 
-# Default accepted mediaTypes for querying manifests
 DEFAULT_REQUEST_MANIFEST_MEDIA_TYPES = [
     DOCKER_V2S2_LIST_MEDIA_TYPE,
     DOCKER_V2S2_MEDIA_TYPE,
@@ -24,13 +29,14 @@ DEFAULT_REQUEST_MANIFEST_MEDIA_TYPES = [
     DOCKER_V2S1_MEDIA_TYPE,
     DOCKER_V2S1_SIGNED_MEDIA_TYPE
 ]
-
 """
-ContainerImageRegistryClient class
-
-A CNCF distribution registry API client
+The default accepted mediaTypes for querying manifests
 """
+
 class ContainerImageRegistryClient:
+    """
+    A CNCF distribution registry API client
+    """
     @staticmethod
     def get_registry_base_url(
             str_or_ref: Union[str, ContainerImageReference]
@@ -39,17 +45,17 @@ class ContainerImageRegistryClient:
         Constructs the distribution registry API base URL from the image
         reference.
         
-        For example:
+        For example,
         - quay.io/ibm/software/cloudpak/hello-world:latest
         
-        Would become:
+        Would become
         - https://quay.io/v2/ibm/software/cloudpak/hello-world
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
+            str_or_ref (Union[str, ContainerImageReference]): An image reference
 
         Returns:
-        str: The distribution registry API base URL
+            str: The distribution registry API base URL
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -84,11 +90,11 @@ class ContainerImageRegistryClient:
         for this image
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        Tuple[str, bool]: The auth, and whether an auth was found
+            Tuple[str, bool]: The auth, and whether an auth was found
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -133,13 +139,12 @@ class ContainerImageRegistryClient:
         response, and MUST include the www-authenticate header
 
         Args:
-        res (Type[requests.Response]): The response from the registry API
-        reg_auth (str): The auth retrieved for the registry
+            res (Type[requests.Response]): The response from the registry API
+            reg_auth (str): The auth retrieved for the registry
 
         Returns:
-        Tuple[str, str]:
-            - The auth scheme for the token
-            - The token retrieved from the auth service
+            str: The auth scheme for the token
+            str: The token retrieved from the auth service
         """
         # Get the www-authenticate header, split into components
         www_auth_header = res.headers['www-authenticate']
@@ -183,13 +188,12 @@ class ContainerImageRegistryClient:
         object
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-            corresponding to the blob descriptor
-        desc (Type[ContainerImageDescriptor]): A blob descriptor
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference corresponding to the blob descriptor
+            desc (Type[ContainerImageDescriptor]): A blob descriptor
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        Type[requests.Response]: The registry API blob response
+            Type[requests.Response]: The registry API blob response
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -239,13 +243,12 @@ class ContainerImageRegistryClient:
         Fetches a config blob from the registry API and returns as a dict
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-            corresponding to the config descriptor
-        desc (ContainerImageDescriptor): A blob descriptor
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference corresponding to the config descriptor
+            desc (ContainerImageDescriptor): A blob descriptor
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        Dict[str, Any]: The config as a dict
+            Dict[str, Any]: The config as a dict
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -271,11 +274,11 @@ class ContainerImageRegistryClient:
         response object
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        requests.Response: The registry API response
+            requests.Response: The registry API response
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -328,11 +331,11 @@ class ContainerImageRegistryClient:
         Fetches the manifest from the registry API and returns as a dict
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        Dict[str, Any]: The manifest loaded into a dict
+            Dict[str, Any]: The manifest loaded into a dict
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -357,11 +360,11 @@ class ContainerImageRegistryClient:
         Fetches the digest from the registry API
 
         Args:
-        str_or_ref (Union[str, ContainerImageReference]): An image reference
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            str_or_ref (Union[str, ContainerImageReference]): An image reference
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        str: The image digest
+            str: The image digest
         """
         # If given a str, then load as a ref
         ref = str_or_ref
@@ -401,11 +404,8 @@ class ContainerImageRegistryClient:
         Deletes the reference from the registry using the registry API
 
         Args:
-        str_or_ref (Union[str, ContainerImage]): An image reference
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
-
-        Returns:
-        None
+            str_or_ref (Union[str, ContainerImage]): An image reference
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
         """
         # If given a str, then load as a ref
         ref = str_or_ref

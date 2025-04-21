@@ -1,10 +1,12 @@
+"""
+Contains OCI-specific JSON schema constants for OCI image indices, index
+entries, and manifests
+"""
+
 from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA, \
                                     IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA
 
-"""
-The JSON schema for validating OCI image index entries
-Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md
-"""
+# See doc comments below
 IMAGE_INDEX_ENTRY_OCI_SCHEMA = {
     "type": "object",
     "description": "Each object in manifests includes a set of descriptor " + \
@@ -48,11 +50,14 @@ IMAGE_INDEX_ENTRY_OCI_SCHEMA = {
         }
     }
 }
-
 """
-The JSON schema for validating OCI image indexes
+The JSON schema for validating OCI image index entries
 Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md
+
+:meta hide-value:
 """
+
+# See doc comments below
 IMAGE_INDEX_OCI_SCHEMA = {
     "type": "object",
     "description": "The image index is a higher-level manifest which " + \
@@ -93,11 +98,14 @@ IMAGE_INDEX_OCI_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for validating OCI image indexes
+Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md
 
+:meta hide-value:
 """
-The JSON schema for validating OCI manifests
-Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/manifest.md
-"""
+
+# See doc comments below
 MANIFEST_OCI_SCHEMA = {
     "type": "object",
     "description": "The JSON schema for " + \
@@ -141,3 +149,9 @@ MANIFEST_OCI_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for validating OCI manifests
+Ref: https://github.com/opencontainers/image-spec/blob/v1.0.1/manifest.md
+
+:meta hide-value:
+"""

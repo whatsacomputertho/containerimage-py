@@ -1,3 +1,11 @@
+"""
+Contains the ContainerImage object, which is the main object intended for use
+by end-users of containerimage-py.  As a user of this object, you can pass in
+a reference to a container image in a remote registry.  Then through the object
+interface you can interact with the container image & registry, fetching
+metadata and mutating the image through the registry API.
+"""
+
 from __future__ import annotations
 import json
 import requests
@@ -28,47 +36,40 @@ wrapped_default.default = json.JSONEncoder().default
 json.JSONEncoder.original_default = json.JSONEncoder.default
 json.JSONEncoder.default = wrapped_default
 
-"""
-ContainerImage class
-
-Represents a container image. Contains validation logic for container image
-references, and logic for managing container images in remote registries.
-"""
 class ContainerImage(ContainerImageReference):
+    """
+    Extends the ContainerImageReference class and uses the
+    ContainerImageRegistryClient class to provide a convenient interface
+    through which users can specify their image reference, then query the
+    registry API for information about the image.
+    """
     @staticmethod
     def is_manifest_list_static(
             manifest: Union[
-                Type[ContainerImageManifestV2S2],
-                Type[ContainerImageManifestListV2S2],
-                Type[ContainerImageManifestOCI],
-                Type[ContainerImageIndexOCI]
+                ContainerImageManifestV2S2,
+                ContainerImageManifestListV2S2,
+                ContainerImageManifestOCI,
+                ContainerImageIndexOCI
             ]
         ) -> bool:
         """
         Determine if an arbitrary manifest object is a manifest list
 
         Args:
-        manifest (
-            Union[
-                Type[ContainerImageManifestV2S2],
-                Type[ContainerImageManifestListV2S2],
-                Type[ContainerImageManifestOCI],
-                Type[ContainerImageIndexOCI]
-            ]
-        ): The manifest object, generally from get_manifest method
+            manifest (Union[ContainerImageManifestV2S2,ContainerImageManifestListV2S2,ContainerImageManifestOCI,ContainerImageIndexOCI]): The manifest object, generally from get_manifest method
 
         Returns:
-        bool: Whether the manifest object is a list or single-arch
+            bool: Whether the manifest object is a list or single-arch
         """
         return isinstance(manifest, ContainerImageManifestList)
     
     @staticmethod
     def is_oci_static(
             manifest: Union[
-                Type[ContainerImageManifestV2S2],
-                Type[ContainerImageManifestListV2S2],
-                Type[ContainerImageManifestOCI],
-                Type[ContainerImageIndexOCI]
+                ContainerImageManifestV2S2,
+                ContainerImageManifestListV2S2,
+                ContainerImageManifestOCI,
+                ContainerImageIndexOCI
             ]
         ) -> bool:
         """
@@ -76,17 +77,10 @@ class ContainerImage(ContainerImageReference):
         index.
 
         Args:
-        manifest (
-            Union[
-                Type[ContainerImageManifestV2S2],
-                Type[ContainerImageManifestListV2S2],
-                Type[ContainerImageManifestOCI],
-                Type[ContainerImageIndexOCI]
-            ]
-        ): The manifest object, generally from get_manifest method
+            manifest (Union[ContainerImageManifestV2S2,ContainerImageManifestListV2S2,ContainerImageManifestOCI,ContainerImageIndexOCI]): The manifest object, generally from get_manifest method
 
         Returns:
-        bool: Whether the manifest object is in the OCI format
+            bool: Whether the manifest object is in the OCI format
         """
         return isinstance(manifest, ContainerImageManifestOCI) or \
                 isinstance(manifest, ContainerImageIndexOCI)
@@ -96,7 +90,7 @@ class ContainerImage(ContainerImageReference):
         Constructor for the ContainerImage class
 
         Args:
-        ref (str): The image reference
+            ref (str): The image reference
         """
         # Validate the image reference
         valid, err = ContainerImage.validate_static(ref)
@@ -110,11 +104,8 @@ class ContainerImage(ContainerImageReference):
         """
         Validates an image reference
 
-        Args:
-        None
-
         Returns:
-        bool: Whether the ContainerImage's reference is valid
+            bool: Whether the ContainerImage's reference is valid
         """
         return ContainerImage.validate_static(self.ref)
     
@@ -124,10 +115,10 @@ class ContainerImage(ContainerImageReference):
         it from the registry if tag reference
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON
+            auth (Dict[str, Any]): A valid docker config JSON
 
         Returns:
-        str: The image digest
+            str: The image digest
         """
         if self.is_digest_ref():
             return self.get_identifier()
@@ -141,10 +132,10 @@ class ContainerImage(ContainerImageReference):
         ContainerImagePlatforms
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON
+            auth (Dict[str, Any]): A valid docker config JSON
 
         Returns:
-        List[ContainerImagePlatform]: The supported platforms
+            List[ContainerImagePlatform]: The supported platforms
         """
         # If manifest, get the config and get its platform
         manifest = self.get_manifest(auth)
@@ -164,25 +155,19 @@ class ContainerImage(ContainerImageReference):
         return platforms
 
     def get_manifest(self, auth: Dict[str, Any]) -> Union[
-            Type[ContainerImageManifestV2S2],
-            Type[ContainerImageManifestListV2S2],
-            Type[ContainerImageManifestOCI],
-            Type[ContainerImageIndexOCI]
+            ContainerImageManifestV2S2,
+            ContainerImageManifestListV2S2,
+            ContainerImageManifestOCI,
+            ContainerImageIndexOCI
         ]:
         """
         Fetches the manifest from the distribution registry API
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON with auth into this
-            image's registry
+            auth (Dict[str, Any]): A valid docker config JSON with auth into this image's registry
 
         Returns:
-        Union[
-            Type[ContainerImageManifestV2S2],
-            Type[ContainerImageManifestListV2S2],
-            Type[ContainerImageManifestOCI],
-            Type[ContainerImageIndexOCI]
-        ]: The manifest or manifest list response from the registry API
+            Union[ContainerImageManifestV2S2,ContainerImageManifestListV2S2,ContainerImageManifestOCI,ContainerImageIndexOCI]: The manifest or manifest list response from the registry API
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -200,11 +185,10 @@ class ContainerImage(ContainerImageReference):
         registry.
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON with auth into this
-            image's registry
+            auth (Dict[str, Any]): A valid docker config JSON with auth into this image's registry
         
         Returns:
-        bool: Whether the image exists in the registry
+            bool: Whether the image exists in the registry
         """
         try:
             ContainerImageRegistryClient.get_manifest(self, auth)
@@ -220,11 +204,10 @@ class ContainerImage(ContainerImageReference):
         Determine if the image is a manifest list
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON with auth into this
-            image's registry
+            auth (Dict[str, Any]): A valid docker config JSON with auth into this image's registry
 
         Returns:
-        bool: Whether the image is a manifest list or single-arch
+            bool: Whether the image is a manifest list or single-arch
         """
         return ContainerImage.is_manifest_list_static(self.get_manifest(auth))
 
@@ -233,11 +216,10 @@ class ContainerImage(ContainerImageReference):
         Determine if the image is in the OCI format
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON with auth into this
-            image's registry
+            auth (Dict[str, Any]): A valid docker config JSON with auth into this image's registry
         
         Returns:
-        bool: Whether the image is in the OCI format
+            bool: Whether the image is in the OCI format
         """
         return ContainerImage.is_oci_static(self.get_manifest(auth))
 
@@ -246,10 +228,10 @@ class ContainerImage(ContainerImageReference):
         Gets the image's mediaType from its manifest
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        str: The image's mediaType
+            str: The image's mediaType
         """
         return self.get_manifest(auth).get_media_type()
 
@@ -259,10 +241,10 @@ class ContainerImage(ContainerImageReference):
         from the registry.
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        int: The size of the image in bytes
+            int: The size of the image in bytes
         """
         # Get the manifest and calculate its size
         manifest = self.get_manifest(auth)
@@ -277,10 +259,10 @@ class ContainerImage(ContainerImageReference):
         from the registry.  Formats as a human readable string (e.g. 3.14 KB)
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
 
         Returns:
-        str: The size of the image in bytes in human readable format (1.25 GB)
+            str: The size of the image in bytes in human readable format (1.25 GB)
         """
         return ByteUnit.format_size_bytes(self.get_size(auth))
     
@@ -289,10 +271,7 @@ class ContainerImage(ContainerImageReference):
         Deletes the image from the registry.
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
-
-        Returns:
-        None
+            auth (Dict[str, Any]): A valid docker config JSON loaded into a dict
         """
         # Ensure the ref is valid, if not raise an exception
         valid, err = self.validate()
@@ -300,19 +279,14 @@ class ContainerImage(ContainerImageReference):
             raise ContainerImageError(err)
         ContainerImageRegistryClient.delete(self, auth)
 
-"""
-ContainerImageList class
-
-Represents a list of ContainerImages. Enables performing bulk actions against
-many container images at once.
-"""
 class ContainerImageList:
+    """
+    Represents a list of ContainerImages. Enables performing bulk actions
+    against many container images at once.
+    """
     def __init__(self):
         """
         Constructor for ContainerImageList class
-
-        Args:
-        None
         """
         self.images = []
     
@@ -320,23 +294,17 @@ class ContainerImageList:
         """
         Returns the length of the ContainerImageList
 
-        Args:
-        None
-
         Returns:
-        int: The length of the ContainerImageList
+            int: The length of the ContainerImageList
         """
         return len(self.images)
     
     def __iter__(self) -> Iterator[ContainerImage]:
         """
-        Returns an iterator over the ContainerImageList
-
-        Args:
-        None
+        Returns an iterator over the ContainerImageList 
 
         Returns:
-        Iterator[ContainerImage]: The iterator over the ContainerImageList
+            Iterator[ContainerImage]: The iterator over the ContainerImageList
         """
         return iter(self.images)
     
@@ -345,10 +313,7 @@ class ContainerImageList:
         Append a new ContainerImage to the ContainerImageList
 
         Args:
-        image (Type[ContainerImage]): The ContainerImage to add
-
-        Returns:
-        None
+            image (Type[ContainerImage]): The ContainerImage to add
         """
         self.images.append(image)
 
@@ -357,10 +322,10 @@ class ContainerImageList:
         Get the deduplicated size of all container images in the list
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        int: The deduplicated size of all container images in the list
+            int: The deduplicated size of all container images in the list
         """
         # Aggregate all layer and config digests, sum manifest list entries
         entry_sizes = 0
@@ -411,10 +376,10 @@ class ContainerImageList:
         formatted as a human readable string (e.g. 3.14 MB)
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        str: List size in bytes formatted to nearest unit (ex. "1.23 MB")
+            str: List size in bytes formatted to nearest unit (ex. "1.23 MB")
         """
         return ByteUnit.format_size_bytes(self.get_size(auth))
     
@@ -423,10 +388,7 @@ class ContainerImageList:
         Delete all of the container images in the list from the registry
 
         Args:
-        auth (Dict[str, Any]): A valid docker config JSON dict
-
-        Returns:
-        None
+            auth (Dict[str, Any]): A valid docker config JSON dict
         """
         for image in self.images:
             image.delete(auth)
@@ -439,10 +401,10 @@ class ContainerImageList:
         the argument ContainerImageList is viewed as the previous version.
 
         Args:
-        previous (Type[ContainerImageList]): The "previous" ContainerImageList
+            previous (Type[ContainerImageList]): The "previous" ContainerImageList
 
         Returns:
-        Type[ContainerImageListDiff]: The diff between the ContainerImageLists
+            Type[ContainerImageListDiff]: The diff between the ContainerImageLists
         """
         # Initialize a ContainerImageListDiff
         diff = ContainerImageListDiff()
@@ -475,18 +437,13 @@ class ContainerImageList:
                 diff.removed.append(images[image_name]['previous'])
         return diff
 
-"""
-ContainerImageListDiff class
-
-Represents a diff between two ContainerImageLists
-"""
 class ContainerImageListDiff:
+    """
+    Represents a diff between two ContainerImageLists
+    """
     def __init__(self):
         """
         Constructor for the ContainerImageListDiff class
-
-        Args:
-        None
         """
         self.added = ContainerImageList()
         self.removed = ContainerImageList()
@@ -497,11 +454,8 @@ class ContainerImageListDiff:
         """
         Formats a ContainerImageListDiff as a string
 
-        Args:
-        None
-
         Returns:
-        str: The ContainerImageListDiff formatted as a string
+            str: The ContainerImageListDiff formatted as a string
         """
         # Format the summary
         summary =   f"Added:\t{len(self.added)}\n" + \

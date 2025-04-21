@@ -1,3 +1,9 @@
+"""
+Contains a base ContainerImageManifestListEntry class which is extended by the
+docker v2s2 and OCI specifications for the entries in their respective manifest
+list implementations
+"""
+
 import json
 import re
 from jsonschema     import  ValidationError
@@ -5,22 +11,20 @@ from typing         import  Dict, Any, Type
 from image.regex    import  ANCHORED_DIGEST
 from image.platform import  ContainerImagePlatform
 
-"""
-ContainerImageManifestListEntry class
-
-Represents a manifest list entry in a manifest list response from the
-distribution registry API. This is a base class extended by the
-ContainerImageManifestListEntryV2S2 and ContainerImageIndexEntryOCI
-classes since the two specs are very similar, with the v2s2 spec being
-more restrictive than the OCI spec.
-"""
 class ContainerImageManifestListEntry:
+    """
+    Represents a manifest list entry in a manifest list response from the
+    distribution registry API. This is a base class extended by the
+    ContainerImageManifestListEntryV2S2 and ContainerImageIndexEntryOCI
+    classes since the two specs are very similar, with the v2s2 spec being
+    more restrictive than the OCI spec.
+    """
     def __init__(self, entry: Dict[str, Any]):
         """
         Constructor for the ContainerImageManifestListEntry class
 
         Args:
-        entry (Dict[str, Any]): The manifest list entry loaded into a dict
+            entry (Dict[str, Any]): The manifest list entry loaded into a dict
         """
         self.entry = entry
     
@@ -28,11 +32,8 @@ class ContainerImageManifestListEntry:
         """
         Returns the entry digest, validates the digest in the process
 
-        Args:
-        None
-
         Returns:
-        str: The entry digest
+            str: The entry digest
         """
         digest = self.entry.get("digest")
         valid = bool(re.match(ANCHORED_DIGEST, digest))
@@ -44,11 +45,8 @@ class ContainerImageManifestListEntry:
         """
         Returns the entry size in bytes
 
-        Args:
-        None
-
         Returns:
-        int: The entry size in bytes
+            int: The entry size in bytes
         """
         return int(self.entry.get("size"))
 
@@ -56,11 +54,8 @@ class ContainerImageManifestListEntry:
         """
         Returns the entry mediaType
 
-        Args:
-        None
-
         Returns:
-        str: The entry mediaType
+            str: The entry mediaType
         """
         media_type = self.entry.get("mediaType")
         if media_type == None:
@@ -71,11 +66,8 @@ class ContainerImageManifestListEntry:
         """
         Returns the entry platform metadata as a ContainerImagePlatform
 
-        Args:
-        None
-
         Returns:
-        Type[ContainerImagePlatform]: The platform metadata
+            Type[ContainerImagePlatform]: The platform metadata
         """
         platform = self.entry.get("platform")
         if platform == None:
@@ -86,11 +78,8 @@ class ContainerImageManifestListEntry:
         """
         Formats the ContainerImageManifestListEntry as a string
 
-        Args:
-        None
-
         Returns:
-        str: The ContainerImageManifestListEntry formatted as a string
+            str: The ContainerImageManifestListEntry formatted as a string
         """
         return json.dumps(self.entry, indent=2, sort_keys=False)
     
@@ -98,10 +87,7 @@ class ContainerImageManifestListEntry:
         """
         Formats the ContainerImageManifestListEntry as a JSON dictionary
 
-        Args:
-        None
-
         Returns:
-        Dict[str, Any]: The ContainerImageManifestListEntry as a JSON dict
+            Dict[str, Any]: The ContainerImageManifestListEntry as a JSON dict
         """
         return self.entry

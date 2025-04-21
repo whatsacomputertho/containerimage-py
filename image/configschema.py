@@ -1,3 +1,9 @@
+"""
+Contains various JSON schema constants which together form the overarching
+container image config schema
+"""
+
+# See doc comments below
 CONTAINER_IMAGE_CONFIG_RUNTIME_CONFIG_SCHEMA = {
     "type": "object",
     "description": "The execution parameters which SHOULD be " + \
@@ -158,7 +164,13 @@ CONTAINER_IMAGE_CONFIG_RUNTIME_CONFIG_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for the config property of a container image config
 
+:meta hide-value:
+"""
+
+# See doc comments below
 CONTAINER_IMAGE_CONFIG_ROOTFS_SCHEMA = {
     "type": "object",
     "description": "The rootfs key references the layer content addresses " + \
@@ -183,7 +195,13 @@ CONTAINER_IMAGE_CONFIG_ROOTFS_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for the rootfs property of a container image config
 
+:meta hide-value:
+"""
+
+# See doc comments below
 CONTAINER_IMAGE_CONFIG_HISTORY_SCHEMA = {
     "type": "object",
     "description": "Describes the history of each layer. The array is " + \
@@ -216,7 +234,14 @@ CONTAINER_IMAGE_CONFIG_HISTORY_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for the entries in the history list property in a container
+image config
 
+:meta hide-value:
+"""
+
+# See doc comments below
 CONTAINER_IMAGE_CONFIG_SCHEMA = {
     "type": "object",
     "description": "An image is an ordered collection of root filesystem " + \
@@ -285,3 +310,8 @@ CONTAINER_IMAGE_CONFIG_SCHEMA = {
         }
     }
 }
+"""
+The JSON schema for a container image config
+
+:meta hide-value:
+"""

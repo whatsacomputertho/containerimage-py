@@ -1,3 +1,9 @@
+"""
+Contains a base ContainerImageManifestList class which is extended by the
+docker v2s2 and OCI specifications for their respective manifest list
+implementations
+"""
+
 import re
 import json
 from image.client               import ContainerImageRegistryClient
@@ -7,21 +13,19 @@ from image.manifestlistentry    import ContainerImageManifestListEntry
 from image.regex                import ANCHORED_NAME
 from typing                     import Dict, Any, List
 
-"""
-ContainerImageManifestList class
-
-Represents a manifest list returned from the distribution registry API.
-This is a base class extended by the ContainerImageManifestListV2S2 and
-ContainerImageManifestListOCI since the two specs are very similar, with the
-v2s2 spec being more restrictive than the OCI spec.
-"""
 class ContainerImageManifestList:
+    """
+    Represents a manifest list returned from the distribution registry API.
+    This is a base class extended by the ContainerImageManifestListV2S2 and
+    ContainerImageManifestListOCI since the two specs are very similar, with the
+    v2s2 spec being more restrictive than the OCI spec.
+    """
     def __init__(self, manifest_list: Dict[str, Any]):
         """
         Constructor for the ContainerImageManifestList class
 
         Args:
-        manifest_list (Dict[str, Any]): The manifest list loaded into a dict
+            manifest_list (Dict[str, Any]): The manifest list loaded into a dict
         """
         self.manifest_list = manifest_list
 
@@ -30,11 +34,8 @@ class ContainerImageManifestList:
         Returns the manifest list entries as ContainerImageManifestListEntry
         instances
 
-        Args:
-        None
-
         Returns:
-        List[ContainerImageManifestListEntry]: The entries
+            List[ContainerImageManifestListEntry]: The entries
         """
         # Loop through each entry in the manifest list and append to the list
         entries = []
@@ -51,11 +52,8 @@ class ContainerImageManifestList:
         """
         Returns the combined size of each of the entries in the list
 
-        Args:
-        None
-
         Returns:
-        int: The combined size of each of the entries in the list
+            int: The combined size of each of the entries in the list
         """
         # Loop through each entry in the manifest list and add its size
         # into the total
@@ -72,11 +70,11 @@ class ContainerImageManifestList:
         Fetches the arch manifests from the distribution registry API
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        List[ContainerImageManifest]: The arch manifests
+            List[ContainerImageManifest]: The arch manifests
         """
         # Validate the image name
         valid = bool(re.match(ANCHORED_NAME, name))
@@ -109,11 +107,11 @@ class ContainerImageManifestList:
         into a list
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        int: The list of layer descriptors across each of the manifests
+            int: The list of layer descriptors across each of the manifests
         """
         layers = []
         manifests = self.get_manifests(name, auth)
@@ -131,12 +129,11 @@ class ContainerImageManifestList:
         into a list
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        List[ContainerImageDescriptor]: The list of config descriptors across
-            each of the manifests
+            List[ContainerImageDescriptor]: The list of config descriptors across each of the manifests
         """
         configs = []
         manifests = self.get_manifests(name, auth)
@@ -148,11 +145,8 @@ class ContainerImageManifestList:
         """
         Returns the mediaType of the container image manifest list
 
-        Args:
-        None
-
         Returns:
-        str: The container image manifest list mediaType
+            str: The container image manifest list mediaType
         """
         return str(self.manifest_list.get("mediaType"))
 
@@ -161,11 +155,11 @@ class ContainerImageManifestList:
         Calculates the size of the image using the distribution registry API
 
         Args:
-        name (str): A valid image name, the name of the manifest
-        auth (Dict[str, Any]): A valid docker config JSON dict
+            name (str): A valid image name, the name of the manifest
+            auth (Dict[str, Any]): A valid docker config JSON dict
 
         Returns:
-        int: The size of the manifest list in bytes
+            int: The size of the manifest list in bytes
         """
         # Validate the image name
         valid = bool(re.match(ANCHORED_NAME, name))
@@ -220,11 +214,8 @@ class ContainerImageManifestList:
         """
         Formats the ContainerImageManifestListV2S2 as a string
 
-        Args:
-        None
-
         Returns:
-        str: The ContainerImageManifestListV2S2 formatted as a string
+            str: The ContainerImageManifestListV2S2 formatted as a string
         """
         return json.dumps(self.manifest_list, indent=2, sort_keys=False)
 
@@ -232,10 +223,7 @@ class ContainerImageManifestList:
         """
         Formats the ContainerImageManifestListV2S2 as a JSON dict
 
-        Args:
-        None
-
         Returns:
-        Dict[str, Any]: The ContainerImageManifestListV2S2 formatted as a JSON dict
+            Dict[str, Any]: The ContainerImageManifestListV2S2 formatted as a JSON dict
         """
         return self.manifest_list

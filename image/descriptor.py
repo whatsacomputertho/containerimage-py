@@ -1,3 +1,8 @@
+"""
+Contains a base ContainerImageDescriptor class which is implemented by the
+docker v2s2 and OCI specifications for layer, config, and blob descriptors
+"""
+
 import json
 import re
 from jsonschema             import  validate, ValidationError
@@ -5,18 +10,16 @@ from typing                 import  Dict, Any, Tuple, Union, List
 from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA
 from image.regex            import  ANCHORED_DIGEST
 
-"""
-ContainerImageDescriptor class
-
-Represents a descriptor defined by the OCI image specification. Descriptors
-simply describe some content stored by the registry, which include configs
-and layers.
-
-A ContainerImageDescriptor follows a JSON schema which is a superset of the
-v2s2 config & layer schemas, which are effectively just descriptors.  Hence,
-we reuse this class across both v2s2 layers / configs, and OCI descriptors.
-"""
 class ContainerImageDescriptor:
+    """
+    Represents a descriptor defined by the OCI image specification. Descriptors
+    simply describe some content stored by the registry, which include configs
+    and layers.
+
+    A ContainerImageDescriptor follows a JSON schema which is a superset of the
+    v2s2 config & layer schemas, which are effectively just descriptors.  Hence,
+    we reuse this class across both v2s2 layers / configs, and OCI descriptors.
+    """
     @staticmethod
     def validate_static(descriptor: Dict[str, Any]) -> Tuple[bool, str]:
         """

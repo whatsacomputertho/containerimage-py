@@ -1,9 +1,16 @@
+"""
+Contains docker v2s2-specific JSON schema constants for v2s2 manifests,
+manifest list entries, and manifest lists
+"""
+
 from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA, \
                                     IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA
 
 """
 The JSON schema for validating v2s2 manifest list entries (manifests)
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_LIST_V2_ENTRY_SCHEMA = {
     "type": "object",
@@ -37,6 +44,8 @@ MANIFEST_LIST_V2_ENTRY_SCHEMA = {
 """
 The JSON schema for validating v2s2 manifest lists
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_LIST_V2_SCHEMA = {
     "type": "object",
@@ -71,6 +80,8 @@ MANIFEST_LIST_V2_SCHEMA = {
 """
 The JSON schema for validaing v2s2 manifests
 Ref: https://distribution.github.io/distribution/spec/manifest-v2-2/
+
+:meta hide-value:
 """
 MANIFEST_V2_SCHEMA = {
     "type": "object",

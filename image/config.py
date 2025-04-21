@@ -1,18 +1,26 @@
+"""
+Contains the ContainerImageConfig class, which specifies the runtime
+configuration for a container image.
+"""
+
 from typing import Dict, Any, Tuple, Type, Union
 from jsonschema import validate, ValidationError
 from image.configschema import CONTAINER_IMAGE_CONFIG_SCHEMA
 from image.platform import ContainerImagePlatform
 
 class ContainerImageConfig:
+    """
+    The runtime configuration for a container image
+    """
     def validate_static(config: Dict[str, Any]) -> Tuple[bool, str]:
         """
         Validates a container image config loaded into a dict
 
         Args:
-        config (Dict[str, Any]): The config loaded into a dict
+            config (Dict[str, Any]): The config loaded into a dict
 
         Returns:
-        Tuple[bool, str]: Whether the config is valid, error message
+            Tuple[bool, str]: Whether the config is valid, error message
         """
         try:
             validate(
@@ -28,7 +36,7 @@ class ContainerImageConfig:
         Constructor for the ContainerImageConfig class
 
         Args:
-        config (Dict[str, Any]): The config loaded into a dict
+            config (Dict[str, Any]): The config loaded into a dict
         """
         # Validate the config
         valid, err = ContainerImageConfig.validate_static(config)
@@ -42,11 +50,8 @@ class ContainerImageConfig:
         """
         Validates a ContainerImageConfig instance
 
-        Args:
-        None
-
         Returns:
-        Tuple[bool, str]: Whether the config is valid, error message
+            Tuple[bool, str]: Whether the config is valid, error message
         """
         return ContainerImageConfig.validate_static(self.config)
 
@@ -54,11 +59,8 @@ class ContainerImageConfig:
         """
         Returns the config's architecture
 
-        Args:
-        None
-
         Returns:
-        str: The config's architecture
+            str: The config's architecture
         """
         arch = self.config.get("architecture")
         if arch == None:
@@ -69,11 +71,8 @@ class ContainerImageConfig:
         """
         Returns the config's operating system name
 
-        Args:
-        None
-
         Returns:
-        str: The config's operating system name
+            str: The config's operating system name
         """
         os = self.config.get("os")
         if os == None:
@@ -84,11 +83,8 @@ class ContainerImageConfig:
         """
         Returns the platform's variant, None if not found
 
-        Args:
-        None
-
         Returns:
-        Union[str, None]: The platform variant, None if not found
+            Union[str, None]: The platform variant, None if not found
         """
         variant = self.config.get("variant")
         if variant == None:
@@ -99,11 +95,8 @@ class ContainerImageConfig:
         """
         Returns the platform of the config as a ContainerImagePlatform
 
-        Args:
-        None
-
         Returns:
-        Type[ContainerImagePlatform]: The platform
+            Type[ContainerImagePlatform]: The platform
         """
         platform_dict = {
             "os": self.get_os(),

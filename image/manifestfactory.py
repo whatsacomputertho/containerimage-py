@@ -1,3 +1,8 @@
+"""
+Contains a base factory pattern implementation in which a generic manifest dict
+can be passed in, and the factory can determine which manifest type to return
+"""
+
 import json
 from image.errors   import  ContainerImageError
 from image.oci      import  ContainerImageManifestOCI, \
@@ -6,28 +11,26 @@ from image.v2s2     import  ContainerImageManifestV2S2, \
                             ContainerImageManifestListV2S2
 from typing         import  Dict, Any, Union
 
-"""
-ContainerImageManifestFactory class
-
-A factory pattern implementation.  Given a distribution registry manifest
-response, this class can instantiate any of the following types, based on the
-manifest's format
-- ContainerImageManifestListV2S2
-- ContainerImageManifestV2S2
-- ContainerImageIndexOCI
-- ContainerImageManifestOCI
-"""
 class ContainerImageManifestFactory:
+    """
+    A factory pattern implementation.  Given a distribution registry manifest
+    response, this class can instantiate any of the following types, based on the
+    manifest's format
+    - ContainerImageManifestListV2S2
+    - ContainerImageManifestV2S2
+    - ContainerImageIndexOCI
+    - ContainerImageManifestOCI
+    """
     def create_v2s2_manifest(manifest: Dict[str, Any]) -> ContainerImageManifestV2S2:
         """
         Given a manifest response from the distribution registry API, create
         a ContainerImageManifestV2S2, or raise an exception if it's invalid
 
         Args:
-        manifest (Dict[str, Any]): A v2s2 manifest dict
+            manifest (Dict[str, Any]): A v2s2 manifest dict
 
         Returns:
-        ContainerImageManifestV2S2: A v2s2 manifest object
+            ContainerImageManifestV2S2: A v2s2 manifest object
         """
         return ContainerImageManifestV2S2(manifest)
 
@@ -38,10 +41,10 @@ class ContainerImageManifestFactory:
         invalid
 
         Args:
-        manifest_list (Dict[str, Any]): A v2s2 manifest list dict
+            manifest_list (Dict[str, Any]): A v2s2 manifest list dict
 
         Returns:
-        ContainerImageManifestListV2S2: A v2s2 manifest list object
+            ContainerImageManifestListV2S2: A v2s2 manifest list object
         """
         return ContainerImageManifestListV2S2(manifest_list)
 
@@ -52,10 +55,10 @@ class ContainerImageManifestFactory:
         invalid
 
         Args:
-        manifest (Dict[str, Any]): An OCI manifest dict
+            manifest (Dict[str, Any]): An OCI manifest dict
 
         Returns:
-        ContainerImageManifestOCI: An OCI manifest object
+            ContainerImageManifestOCI: An OCI manifest object
         """
         return ContainerImageManifestOCI(manifest)
 
@@ -65,10 +68,10 @@ class ContainerImageManifestFactory:
         create a ContainerImageIndexOCI, or raise an exception if it's invalid
 
         Args:
-        index (Dict[str, Any]): An OCI image index dict
+            index (Dict[str, Any]): An OCI image index dict
 
         Returns:
-        ContainerImageIndexOCI: An OCI image index object
+            ContainerImageIndexOCI: An OCI image index object
         """
         return ContainerImageIndexOCI(index)
 
@@ -88,15 +91,10 @@ class ContainerImageManifestFactory:
         - ContainerImageIndexOCI
 
         Args:
-        manifest_or_list (Dict[str, Any]): A manifest or manifest list dict
+            manifest_or_list (Dict[str, Any]): A manifest or manifest list dict
 
         Returns:
-        Union[
-            ContainerImageManifestV2S2,
-            ContainerImageManifestListV2S2,
-            ContainerImageManifestOCI,
-            ContainerImageIndexOCI
-        ]: Manifest or manifest list objects for the OCI & v2s2 specs
+            Union[ContainerImageManifestV2S2,ContainerImageManifestListV2S2,ContainerImageManifestOCI,ContainerImageIndexOCI]: Manifest or manifest list objects for the OCI & v2s2 specs
         """
         # Validate whether this is a v2s2 manifest
         is_v2s2_manifest, vm_err = ContainerImageManifestV2S2.validate_static(
