@@ -5,4 +5,3 @@ containerimage-py
    :maxdepth: 4
 
    image
-   tests

@@ -1,3 +1,8 @@
+"""
+Contains the ContainerImageReference class, which can validate and parse
+references to container images in remote registries
+"""
+
 import re
 from image.errors   import  ContainerImageError
 from image.regex    import  REFERENCE_PAT, \

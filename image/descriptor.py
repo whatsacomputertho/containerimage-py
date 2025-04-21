@@ -1,3 +1,8 @@
+"""
+Contains a base ContainerImageDescriptor class which is implemented by the
+docker v2s2 and OCI specifications for layer, config, and blob descriptors
+"""
+
 import json
 import re
 from jsonschema             import  validate, ValidationError

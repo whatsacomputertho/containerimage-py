@@ -1,3 +1,8 @@
+"""
+Contains various JSON schema constants which together form the overarching
+container image config schema
+"""
+
 # See doc comments below
 CONTAINER_IMAGE_CONFIG_RUNTIME_CONFIG_SCHEMA = {
     "type": "object",

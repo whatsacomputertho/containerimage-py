@@ -1,3 +1,9 @@
+"""
+Contains the ContainerImagePlatform class which represents the OS,
+architecture, and optionally the variant on which the container image is built
+to run
+"""
+
 from typing                 import Dict, Any, Tuple, Union, List
 from jsonschema             import validate, ValidationError
 from image.manifestschema   import IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA

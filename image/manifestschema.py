@@ -1,3 +1,8 @@
+"""
+Contains various JSON schema constants which together form the overarching
+container image manifest schema
+"""
+
 # See doc comments below
 MANIFEST_DESCRIPTOR_SCHEMA = {
     "type": "object",

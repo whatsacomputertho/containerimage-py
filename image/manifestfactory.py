@@ -1,3 +1,8 @@
+"""
+Contains a base factory pattern implementation in which a generic manifest dict
+can be passed in, and the factory can determine which manifest type to return
+"""
+
 import json
 from image.errors   import  ContainerImageError
 from image.oci      import  ContainerImageManifestOCI, \

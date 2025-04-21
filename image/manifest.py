@@ -1,3 +1,8 @@
+"""
+Contains a base ContainerImageManifest class which is extended by the docker
+v2s2 and OCI specifications for their respective manifest implementations
+"""
+
 import json
 from typing             import  Dict, Any, List, Type
 from image.descriptor   import  ContainerImageDescriptor

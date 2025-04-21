@@ -1,3 +1,8 @@
+"""
+Contains OCI-specific JSON schema constants for OCI image indices, index
+entries, and manifests
+"""
+
 from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA, \
                                     IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA
 

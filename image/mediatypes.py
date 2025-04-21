@@ -1,3 +1,8 @@
+"""
+Contains various mediaType constants across the OCI, docker v2s2, and docker
+v2s1 specifications
+"""
+
 # See doc comments below
 DOCKER_V2S2_MEDIA_TYPE = "application/vnd.docker.distribution.manifest.v2+json"
 """

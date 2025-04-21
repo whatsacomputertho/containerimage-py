@@ -1,3 +1,9 @@
+"""
+Contains a base ContainerImageManifestListEntry class which is extended by the
+docker v2s2 and OCI specifications for the entries in their respective manifest
+list implementations
+"""
+
 import json
 import re
 from jsonschema     import  ValidationError

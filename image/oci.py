@@ -1,3 +1,8 @@
+"""
+Contains OCI-specific implementations of the container image manifest,
+manifest list entry, and manifest list classes
+"""
+
 import re
 from typing                     import  Dict, Any, Tuple, List
 from jsonschema                 import  validate, ValidationError

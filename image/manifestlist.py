@@ -1,3 +1,9 @@
+"""
+Contains a base ContainerImageManifestList class which is extended by the
+docker v2s2 and OCI specifications for their respective manifest list
+implementations
+"""
+
 import re
 import json
 from image.client               import ContainerImageRegistryClient

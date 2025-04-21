@@ -1,3 +1,8 @@
+"""
+Contains docker v2s2-specific JSON schema constants for v2s2 manifests,
+manifest list entries, and manifest lists
+"""
+
 from image.manifestschema   import  MANIFEST_DESCRIPTOR_SCHEMA, \
                                     IMAGE_INDEX_ENTRY_PLATFORM_SCHEMA
 

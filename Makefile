@@ -12,4 +12,5 @@ build:
 
 # Build the python docs locally and in CI
 doc:
+	$(PYTHON) -m sphinx.ext.apidoc -o ./doc/source/image . "tests/*"
 	$(PYTHON) -m sphinx ./doc/source ./doc/sphinx

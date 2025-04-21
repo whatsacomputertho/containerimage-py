@@ -1,3 +1,11 @@
+"""
+Contains the ContainerImage object, which is the main object intended for use
+by end-users of containerimage-py.  As a user of this object, you can pass in
+a reference to a container image in a remote registry.  Then through the object
+interface you can interact with the container image & registry, fetching
+metadata and mutating the image through the registry API.
+"""
+
 from __future__ import annotations
 import json
 import requests
@@ -33,7 +41,7 @@ class ContainerImage(ContainerImageReference):
     Extends the ContainerImageReference class and uses the
     ContainerImageRegistryClient class to provide a convenient interface
     through which users can specify their image reference, then query the
-    registry for information about the image.
+    registry API for information about the image.
     """
     @staticmethod
     def is_manifest_list_static(
