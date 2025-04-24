@@ -4,6 +4,8 @@
 
 A python library for interacting with container images and container image registries
 
+**Docs**: https://containers.github.io/containerimage-py/
+
 ## Quick Example
 
 Here is a quick motivating example for how you might use `containerimage-py` in your python scripts to fetch basic information about a container image.
