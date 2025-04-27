@@ -28,4 +28,6 @@ Homepage = "https://github.com/whatsacomputertho/containerimage-py"
 Issues = "https://github.com/whatsacomputertho/containerimage-py/issues"
 
 [project.optional-dependencies]
-test = ["pytest-mock"]
+test = ["tox","pytest","pytest-mock","pytest-cov"]
+build = ["build"]
+doc = ["sphinx","sphinx_rtd_theme"]

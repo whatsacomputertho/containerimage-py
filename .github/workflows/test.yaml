@@ -1,0 +1,31 @@
+name: Test
+
+on:
+  push:
+    branches: '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Dependencies
+      run: |
+        # Install the python interpreters for running the test matrix
+        sudo apt install software-properties-common
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update
+        sudo apt install python3.9 -y
+        sudo apt install python3.9-distutils -y
+        sudo apt install python3.10 -y
+        sudo apt install python3.11 -y
+        sudo apt install python3.12 -y
+        sudo apt install python3.13 -y
+
+        # Install the python dependencies for running the tests
+        make test-dependencies
+
+    - name: Unit Test Matrix
+      run: |
+        # Run the unit test matrix
+        make test
