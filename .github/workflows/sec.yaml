@@ -1,0 +1,10 @@
+jobs:
+  sec:
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: |
+          make sec-dependencies
+      - name: Security Scan
+        run: |
+          make sec

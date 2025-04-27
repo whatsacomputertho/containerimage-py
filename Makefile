@@ -34,3 +34,14 @@ doc-dependencies:
 doc:
 	$(PYTHON) -m sphinx.ext.apidoc -o ./doc/source/image . "tests/*"
 	$(PYTHON) -m sphinx ./doc/source ./doc/sphinx
+
+##########
+# Security recipes
+#
+# Install required dependencies for the sec recipe
+sec-dependencies:
+	$(PYTHON) -m pip install -r requirements.sec.txt
+
+# Security scan locally and in CI
+sec:
+	$(PYTHON) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline
