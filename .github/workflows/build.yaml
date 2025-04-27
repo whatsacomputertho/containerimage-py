@@ -1,4 +1,4 @@
-name: Sec
+name: Build
 
 on:
   push:
