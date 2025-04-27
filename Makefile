@@ -4,7 +4,7 @@ PYTHON ?= /usr/bin/python3
 
 # Execute the unit tests locally and in CI
 test:
-	$(PYTHON) -m pytest -vv
+	$(PYTHON) -m tox
 
 # Build the python distribution locally and in CI
 build:

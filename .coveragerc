@@ -1,0 +1,17 @@
+[run]
+source = image
+
+omit =
+    */dist/*
+    */containerimage_py.egg-info/*
+    */doc/*
+    */examples/*
+    */tests/*
+    */__pycache__/*
+    */.pytest_cache/*
+    */.git/*
+    */.github/*
+    */.tox/*
+
+[html]
+directory = test-results/coverage
