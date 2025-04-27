@@ -2,9 +2,13 @@
 
 # containerimage-py
 
+[![Test](https://github.com/containers/containerimage-py/actions/workflows/test.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/test.yaml) [![Sec](https://github.com/containers/containerimage-py/actions/workflows/sec.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/sec.yaml) [![Doc](https://github.com/containers/containerimage-py/actions/workflows/doc.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/doc.yaml)
+
 A python library for interacting with container images and container image registries
 
 **Docs**: https://containers.github.io/containerimage-py/
+
+**Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Quick Example
 
@@ -61,4 +65,4 @@ From the root of this repository, execute
 make build
 ```
 
-Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.
+Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.  For more on this project's make recipes, see [CONTRIBUTING.md](CONTRIBUTING.md#other-make-recipes).
