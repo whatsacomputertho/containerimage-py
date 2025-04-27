@@ -12,14 +12,14 @@ jobs:
     - name: Install Dependencies
       run: |
         # Install the python interpreters for running the test matrix
-        apt install software-properties-common
-        add-apt-repository ppa:deadsnakes/ppa
-        apt update
-        apt install python3.9 -y
-        apt install python3.10 -y
-        apt install python3.11 -y
-        apt install python3.12 -y
-        apt install python3.13 -y
+        sudo apt install software-properties-common
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt update
+        sudo apt install python3.9 -y
+        sudo apt install python3.10 -y
+        sudo apt install python3.11 -y
+        sudo apt install python3.12 -y
+        sudo apt install python3.13 -y
 
         # Install the python dependencies for running the tests
         make test-dependencies
