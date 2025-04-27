@@ -8,6 +8,8 @@ A python library for interacting with container images and container image regis
 
 **Docs**: https://containers.github.io/containerimage-py/
 
+**Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## Quick Example
 
 Here is a quick motivating example for how you might use `containerimage-py` in your python scripts to fetch basic information about a container image.
@@ -63,4 +65,4 @@ From the root of this repository, execute
 make build
 ```
 
-Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.
+Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.  For more on this project's make recipes, see [CONTRIBUTING.md](CONTRIBUTING.md#other-make-recipes).

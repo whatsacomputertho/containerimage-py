@@ -49,7 +49,6 @@ doc:
 # Install required dependencies for the sec recipe
 sec-dependencies:
 	$(PYTHON) -m pip install -r ci/requirements.sec.txt
-	$(PYTHON) -m pre_commit install
 
 # Security scan locally and in CI
 sec:
