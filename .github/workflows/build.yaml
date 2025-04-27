@@ -1,0 +1,20 @@
+name: Sec
+
+on:
+  push:
+    branches: '**'
+
+permissions:
+  contents: write
+
+jobs:
+  sec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: |
+          make build-dependencies
+      - name: Build Distribution
+        run: |
+          make build
