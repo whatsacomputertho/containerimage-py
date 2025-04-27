@@ -1,4 +1,1 @@
 tox
-pytest
-pytest-mock
-pytest-cov
