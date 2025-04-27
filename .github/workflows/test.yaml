@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build and push the FBSim API image
+    - name: Install Dependencies
+      run: |
+        make test-dependencies
+    - name: Unit Test Matrix
       run: |
         make test
