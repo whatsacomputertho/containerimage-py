@@ -2,6 +2,8 @@
 
 # containerimage-py
 
+[![Test](https://github.com/containers/containerimage-py/actions/workflows/test.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/test.yaml) [![Sec](https://github.com/containers/containerimage-py/actions/workflows/sec.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/sec.yaml) [![Doc](https://github.com/containers/containerimage-py/actions/workflows/doc.yaml/badge.svg)](https://github.com/containers/containerimage-py/actions/workflows/doc.yaml)
+
 A python library for interacting with container images and container image registries
 
 **Docs**: https://containers.github.io/containerimage-py/
