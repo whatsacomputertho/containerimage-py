@@ -44,5 +44,5 @@ sec-dependencies:
 
 # Security scan locally and in CI
 sec:
-	$(PYTHON) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline
+	$(PYTHON) -m detect_secrets.pre_commit_hook --baseline .secrets.baseline -v
 	$(PYTHON) -m pip_audit -r requirements.txt
