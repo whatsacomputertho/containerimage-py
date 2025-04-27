@@ -28,7 +28,7 @@ build:
 #
 # Install the required dependencies for the doc recipe
 doc-dependencies:
-	$(PYTHON) -m pip install -r requirements.build.txt
+	$(PYTHON) -m pip install -r requirements.doc.txt
 
 # Build the python docs locally and in CI
 doc:
