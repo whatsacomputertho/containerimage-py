@@ -1,12 +1,12 @@
 name: Doc
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, workflow_dispatch]
 
 permissions:
   contents: write
 
 jobs:
-  docs:
+  doc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
