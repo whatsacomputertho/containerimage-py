@@ -1,5 +1,6 @@
 .PHONY: doc
 PYTHON ?= /usr/bin/python3
+PYPI ?= testpypi
 
 ############
 # Pre-commit recipes
@@ -30,6 +31,27 @@ build-dependencies:
 # Build the python distribution locally and in CI
 build:
 	$(PYTHON) -m build
+
+#########
+# Publish recipes
+#
+# Install the required dependencies for the publish recipe
+publish-dependencies:
+	$(PYTHON) -m pip install -r ci/requirements.publish.txt
+
+# Publish the built python distribution
+# Assumes the python distribution was already built using build recipe
+publish:
+	$(PYTHON) -m twine upload --repository $(PYPI) dist/*
+
+#########
+# Release recipes
+#
+# Install the required dependencies for the release recipe
+release-dependencies: build-dependencies publish-dependencies
+
+# Release the python distribution by building and publishing it
+release: build publish
 
 #####
 # Doc recipes
