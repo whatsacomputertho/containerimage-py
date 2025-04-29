@@ -16,7 +16,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 keywords = ["container","image","py","oci","docker"]
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = [
+    "LICENSE"
+]
 dependencies = [
     "requests",
     "jsonschema"
