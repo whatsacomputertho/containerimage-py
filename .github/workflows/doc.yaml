@@ -1,6 +1,10 @@
 name: Doc
 
-on: [push, workflow_dispatch]
+on:
+  release:
+    types: [published]
+  push:
+    branches: '**'
 
 permissions:
   contents: write
@@ -19,7 +23,7 @@ jobs:
           make doc
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'release' && github.event.release.prerelease == false }}
         with:
           publish_branch: doc
           github_token: ${{ secrets.GITHUB_TOKEN }}
