@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "containerimage-py"
-version = "0.1.0"
+version = "0.1.0-6"
 authors = [
     {name = "Ethan Balcik", email="ethanbalcik@ibm.com" }
 ]
@@ -17,7 +17,9 @@ classifiers = [
 ]
 keywords = ["container","image","py","oci","docker"]
 license = "Apache-2.0"
-license-files = ["LICENSE"]
+license-files = [
+    "LICENSE"
+]
 dependencies = [
     "requests",
     "jsonschema"
