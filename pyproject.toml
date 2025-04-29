@@ -16,14 +16,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 keywords = ["container","image","py","oci","docker"]
-license = "Apache-2.0"
+license = { text = "Apache-2.0" }
 dependencies = [
     "requests",
     "jsonschema"
 ]
-
-[tool.setuptools]
-license-files = [ "LICENSE" ]
 
 [project.urls]
 Homepage = "https://github.com/whatsacomputertho/containerimage-py"
