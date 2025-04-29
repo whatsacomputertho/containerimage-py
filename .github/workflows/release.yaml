@@ -3,8 +3,6 @@ name: Release
 on:
   release:
     types: [published]
-  push:
-    branches: '**'
 
 permissions:
   contents: write
@@ -15,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup Test Credentials
-        if: ${{ github.event_name == 'push' || github.event.release.prerelease == true }}
+        if: github.event.release.prerelease == true
         run: |
           touch $HOME/.pypirc
           echo "[testpypi]" >> $HOME/.pypirc
@@ -32,7 +30,7 @@ jobs:
         run: |
           make release-dependencies
       - name: Test Release Distribution
-        if: ${{ github.event_name == 'push' || github.event.release.prerelease == true }}
+        if: github.event.release.prerelease == true
         run: |
           make release
       - name: Release Distribution
