@@ -1,4 +1,4 @@
-![containerimage-py](./doc/source/_static/container-image-py.png)
+![containerimage-py](https://raw.githubusercontent.com/containers/containerimage-py/main/doc/source/_static/container-image-py.png)
 
 # containerimage-py
 
@@ -8,7 +8,7 @@ A python library for interacting with container images and container image regis
 
 **Docs**: https://containers.github.io/containerimage-py/
 
-**Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
+**Contributing**: [CONTRIBUTING.md](https://github.com/containers/containerimage-py/blob/main/CONTRIBUTING.md)
 
 ## Quick Example
 
@@ -39,8 +39,6 @@ python3 examples/quick-example.py
 
 ### Using Pip
 
-> IMPORTANT: This project has not yet been released on PyPi.  This will not work at this point in time.  Instead follow [the local install instructions](#installation).
-
 Run the following command to install the latest version of this package
 
 ```
@@ -65,4 +63,4 @@ From the root of this repository, execute
 make build
 ```
 
-Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.  For more on this project's make recipes, see [CONTRIBUTING.md](CONTRIBUTING.md#other-make-recipes).
+Under the hood, this will execute `python3 -m build` and produce a `.whl` (wheel) and `.tgz` (TAR-GZip archive) file in the `dist` subdirectory.  For more on this project's make recipes, see [CONTRIBUTING.md](https://github.com/containers/containerimage-py/blob/main/CONTRIBUTING.md#other-make-recipes).

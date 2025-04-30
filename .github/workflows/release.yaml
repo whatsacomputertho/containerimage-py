@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Test Credentials
+        if: github.event.release.prerelease == true
+        run: |
+          touch $HOME/.pypirc
+          echo "[testpypi]" >> $HOME/.pypirc
+          echo "  username = __token__" >> $HOME/.pypirc
+          echo "  password = ${{ secrets.TEST_PYPI_TOKEN }}" >> $HOME/.pypirc
+      - name: Setup Credentials
+        if: github.event.release.prerelease == false
+        run: |
+          touch $HOME/.pypirc
+          echo "[pypi]" >> $HOME/.pypirc
+          echo "  username = __token__" >> $HOME/.pypirc
+          echo "  password = ${{ secrets.PYPI_TOKEN }}" >> $HOME/.pypirc
+      - name: Install Dependencies
+        run: |
+          make release-dependencies
+      - name: Test Release Distribution
+        if: github.event.release.prerelease == true
+        run: |
+          make release
+      - name: Release Distribution
+        if: github.event.release.prerelease == false
+        run: |
+          PYPI=pypi make release
