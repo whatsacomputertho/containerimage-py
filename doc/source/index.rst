@@ -42,8 +42,6 @@ Installation
 
 **Using Pip**
 
-   IMPORTANT: This project has not yet been released on PyPi.  This will not work at this point in time.  Instead follow the local install instructions.
-
 Run the following command to install the latest version of this package using pip
 
 .. code-block:: shell
