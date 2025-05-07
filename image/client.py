@@ -219,7 +219,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.get(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
@@ -308,7 +308,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.get(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
@@ -433,7 +433,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.delete(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
