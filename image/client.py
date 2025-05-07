@@ -139,7 +139,7 @@ class ContainerImageRegistryClient:
         response, and MUST include the www-authenticate header
 
         Args:
-            res (Type[requests.Response]): The response from the registry API
+            res (requests.Response): The response from the registry API
             reg_auth (str): The auth retrieved for the registry
 
         Returns:
@@ -168,9 +168,11 @@ class ContainerImageRegistryClient:
 
         # Send the request to the auth service, parse the token from the
         # response
-        headers = {
-            'Authorization': f"Basic {reg_auth}"
-        }
+        headers = {}
+        if len(reg_auth) > 0:
+            headers = {
+                'Authorization': f"Basic {reg_auth}"
+            }
         token_res = requests.get(auth_url, headers=headers)
         token_res.raise_for_status()
         token_json = token_res.json()
