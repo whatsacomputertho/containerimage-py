@@ -139,7 +139,7 @@ class ContainerImageRegistryClient:
         response, and MUST include the www-authenticate header
 
         Args:
-            res (Type[requests.Response]): The response from the registry API
+            res (requests.Response): The response from the registry API
             reg_auth (str): The auth retrieved for the registry
 
         Returns:
@@ -168,9 +168,11 @@ class ContainerImageRegistryClient:
 
         # Send the request to the auth service, parse the token from the
         # response
-        headers = {
-            'Authorization': f"Basic {reg_auth}"
-        }
+        headers = {}
+        if len(reg_auth) > 0:
+            headers = {
+                'Authorization': f"Basic {reg_auth}"
+            }
         token_res = requests.get(auth_url, headers=headers)
         token_res.raise_for_status()
         token_json = token_res.json()
@@ -219,7 +221,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.get(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
@@ -308,7 +310,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.get(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
@@ -433,7 +435,7 @@ class ContainerImageRegistryClient:
         # Send the request to the distribution registry API
         # If it fails with a 401 response code and auth given, do OAuth dance
         res = requests.delete(api_url, headers=headers)
-        if res.status_code == 401 and found and \
+        if res.status_code == 401 and \
             'www-authenticate' in res.headers.keys():
             # Do Oauth dance if basic auth fails
             # Ref: https://distribution.github.io/distribution/spec/auth/token/
