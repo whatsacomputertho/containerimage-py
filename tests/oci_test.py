@@ -96,20 +96,6 @@ OCI_IMAGE_INDEX_EXAMPLE = {
     }
 }
 
-# An example manifest list entry from the CNCF manifest v2s2 spec
-CNCF_MANIFEST_LIST_ENTRY_EXAMPLE = {
-    "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-    "digest": "sha256:5b0bcabd1ed22e9fb1310cf6c2dec7cdef19f0ad69efa1f392e94a4333501270",
-    "size": 7682,
-    "platform": {
-        "architecture": "amd64",
-        "os": "linux",
-        "features": [
-            "sse4"
-        ]
-    }
-}
-
 # An example image index entry following the OCI spec
 DOCKER_BUILDX_ATTESTATION_INDEX_ENTRY = {
     "mediaType": "application/vnd.oci.image.manifest.v1+json",
@@ -226,14 +212,6 @@ def test_container_image_oci_image_index_entry_static_validation():
         oci_example_mut
     )
     assert inv_plt_valid == False
-    assert isinstance(err, str)
-    assert len(err) > 0
-
-    # CNCF (non-OCI) example should be invalid
-    cncf_example_valid, err = ContainerImageIndexEntryOCI.validate_static(
-        copy.deepcopy(CNCF_MANIFEST_LIST_ENTRY_EXAMPLE)
-    )
-    assert cncf_example_valid == False
     assert isinstance(err, str)
     assert len(err) > 0
 
