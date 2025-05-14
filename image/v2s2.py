@@ -18,13 +18,23 @@ from image.v2s2schema           import  MANIFEST_V2_SCHEMA, \
                                         MANIFEST_LIST_V2_SCHEMA, \
                                         MANIFEST_LIST_V2_ENTRY_SCHEMA
 
-# A list of mediaTypes which are not supported by the v2s2 manifest spec
+# See doc comments below
 UNSUPPORTED_V2S2_MANIFEST_MEDIA_TYPES = [
     OCI_MANIFEST_MEDIA_TYPE
 ]
+"""
+A list of mediaTypes which are not supported by the v2s2 manifest spec.
+This mainly just includes the OCI manifest mediaType.
+"""
+
+# See doc comments below
 UNSUPPORTED_V2S2_MANIFEST_LIST_MEDIA_TYPES = [
     OCI_INDEX_MEDIA_TYPE
 ]
+"""
+A list of mediaTypes which are not supported by the v2s2 manifest list
+spec.  This mainly just includes the OCI index mediaType.
+"""
 
 """
 ContainerImageManifestV2S2 class
@@ -145,10 +155,6 @@ class ContainerImageManifestListEntryV2S2(ContainerImageManifestListEntry):
         )
         if not platform_valid:
             return platform_valid, err
-        
-        # If the mediaType is unsupported, then error
-        if entry["mediaType"] in UNSUPPORTED_V2S2_MANIFEST_MEDIA_TYPES:
-            return False, f"Unsupported mediaType: {entry['mediaType']}"
 
         # Valid if all of the above are valid
         return True, ""
