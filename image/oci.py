@@ -155,10 +155,6 @@ class ContainerImageIndexEntryOCI(ContainerImageManifestListEntry):
             )
             if not platform_valid:
                 return platform_valid, err
-        
-        # If the mediaType is unsupported, then error
-        if entry["mediaType"] in UNSUPPORTED_OCI_MANIFEST_MEDIA_TYPES:
-            return False, f"Unsupported mediaType: {entry['mediaType']}"
 
         # Valid if all of the above are valid
         return True, ""
